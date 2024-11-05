@@ -1,0 +1,15 @@
+Để chạy dự án:
+B1: clone source code từ github.
+B2: npm install
+B2: npm start.
+
+Các thư viện hỗ trợ cho dự án:
+Scss(sass): Thư viện tương tự css.
+classnames: Đặt tên class có hỗ trợ logic if/else.
+Font Awesome: Thư viện hỗ trợ icon.
+
+Cây thư mục dự án
+Folder component: chứa phần layout Header, Footer, và layout Sản phẩm.
+Folder pages: chứa các trang của website.
+Folder routes: setup route đường dẫn link các trang.
+File App.js: Routes tổng giúp gắn các trang với phần Header và Footer.

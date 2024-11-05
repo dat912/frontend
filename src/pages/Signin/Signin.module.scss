@@ -1,0 +1,101 @@
+.wrapper {
+  display: flex;
+  .form-img {
+    width: 100%;
+    height: 500px;
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .form {
+    width: 100%;
+
+    padding: 20px;
+    h3 {
+      font-size: 35px;
+      color: #000000;
+      font-weight: 700;
+      text-align: center;
+    }
+    .form-input {
+      padding: 10px 50px;
+      display: flex;
+      flex-direction: column;
+      span{
+        text-align: center;
+        color: #e81010;
+        font-weight: 500;
+        font-size: 15px;
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        
+      }
+      label {
+        color: #000000;
+        font-weight: 700;
+      }
+      input {
+        color: #000000;
+        font-weight: 700;
+        padding: 15px;
+        font-size: 19px;
+        margin: 5px;
+        border-radius: 10px;
+        border: 1px solid #000000;
+        &::placeholder {
+          color: #000000;
+          font-weight: 700;
+        }
+        &:focus {
+          outline: none;
+          border: 2px solid #000000;
+        }
+      }
+      .action {
+        display: flex;
+        justify-content: space-between;
+        .checkbox {
+          display: flex;
+          font-size: 16px;
+          p {
+            margin-top: 3px;
+            color: #000000;
+            font-weight: 700;
+            cursor: pointer;
+          }
+        }
+        .link {
+          font-weight: 700;
+          color: #000000;
+          text-decoration: none;
+        }
+      }
+    }
+  }
+  .form-btn {
+    padding: 0px 40px;
+    .btn-signin {
+      margin: 10px;
+      width: 100%;
+      padding: 15px;
+      font-size: 20px;
+      background-color: #000000;
+      border: 1px solid #000000;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-signup {
+      margin: 10px;
+      width: 100%;
+      padding: 15px;
+      font-size: 20px;
+      background-color: #ffffff;
+      border: 1px solid #000000;
+      color: #000000;
+      font-weight: 700;
+      cursor: pointer;
+    }
+  }
+}

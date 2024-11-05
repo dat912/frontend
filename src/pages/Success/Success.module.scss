@@ -1,0 +1,22 @@
+.wrapper {
+  height: 42.5vh;
+  .form-logo {
+    width: 150px;
+    height: 150px;
+    margin: auto;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  p {
+    color: #37ba2c;
+    font-size: 30px;
+    font-weight: 800;
+    text-align: center;
+  }
+  .back {
+    text-align: center;
+    color: #a08150;
+  }
+}

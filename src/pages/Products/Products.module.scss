@@ -1,0 +1,80 @@
+.wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  .left {
+    .title {
+      color: #a08250;
+      margin-left: 10px;
+      font-size: 30px;
+      font-weight: 700;
+    }
+    .navigate {
+      margin-left: 10px;
+      color: rgb(135, 135, 135);
+    }
+    width: 20%;
+    height: 100%;
+
+    .list {
+      margin-top: 20px;
+      padding: 5px 10px;
+      border-right: 4px solid #fab42f;
+      .ul {
+        margin: 5px 0px;
+        list-style: none;
+        .li {
+          margin: 5px 0px;
+          font-size: 18px;
+          font-weight: 600;
+          color: #a08250;
+        }
+      }
+    }
+    .banner-1 {
+      margin: 5px 0px;
+      width: 100%;
+      height: 150px;
+
+      border-radius: 5px;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+  .right {
+    width: 100%;
+    height: 100%;
+    .filter {
+      position: absolute;
+      right: 0;
+      display: flex;
+      h3 {
+        margin-top: 15px;
+        margin-right: 10px;
+        color: #545454;
+      }
+      margin-right: 20px;
+      select {
+        cursor: pointer;
+        padding: 10px 20px;
+        color: black;
+        border: none;
+        font-weight: 700;
+        border-radius: 5px;
+        font-size: 17px;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        &:focus {
+          outline: none;
+        }
+      }
+    }
+    .list-product {
+      margin-top: 55px;
+      padding: 10px;
+      display: flex;
+      flex-wrap: wrap;
+    }
+  }
+}

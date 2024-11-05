@@ -1,0 +1,115 @@
+.wrapper {
+  padding: 20px;
+  h3 {
+    color: #a08150;
+    font-size: 30px;
+  }
+  .content {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    .left {
+      width: 100%;
+      table {
+        width: 100%;
+        border-right: 2px solid #a08150;
+        .header {
+          width: 100%;
+          font-size: 20px;
+        }
+        .data {
+          .infor {
+            display: flex;
+            width: 60%;
+            justify-content: space-around;
+            .icon {
+              margin-top: 30px;
+            }
+            .form-img {
+              width: 80px;
+              height: 80px;
+              img {
+                width: 100%;
+                height: 100%;
+              }
+            }
+            .name {
+              display: flex;
+              align-items: center;
+              color: #a08150;
+              font-size: 18px;
+              font-weight: 800;
+            }
+          }
+          .price {
+            font-weight: 800;
+            color: red;
+            font-size: 20px;
+          }
+          .action {
+            width: 50%;
+            display: flex;
+            margin: auto;
+            justify-content: space-between;
+            .prev {
+              padding: 10px;
+            }
+            .number {
+              display: flex;
+              align-items: center;
+            }
+          }
+        }
+      }
+      .back {
+        margin: 10px 0px;
+        width: 40%;
+        padding: 15px;
+        font-size: 18px;
+        background-color: #a08150;
+        color: white;
+        font-weight: 800;
+        cursor: pointer;
+        border: none;
+      }
+    }
+    .right {
+      width: 40%;
+      padding: 4px;
+      h4 {
+        font-size: 20px;
+      }
+      .sum {
+        font-size: 20px;
+        padding: 10px;
+        .temp {
+          margin: 10px 0px;
+          display: flex;
+          justify-content: space-between;
+          .title {
+            color: #a08150;
+            font-weight: 800;
+          }
+          .temp-price {
+            color: #777777;
+            font-weight: 800;
+          }
+          .sum-price {
+            color: red;
+            font-weight: 800;
+          }
+        }
+      }
+      .payment {
+        width: 100%;
+        padding: 10px;
+        background-color: #a08150;
+        font-size: 20px;
+        color: white;
+        font-weight: 800;
+        border: none;
+        cursor: pointer;
+      }
+    }
+  }
+}

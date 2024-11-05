@@ -1,0 +1,83 @@
+.wrapper {
+  padding: 50px;
+  width: 50%;
+  margin: auto;
+  
+  h3 {
+    color: #000000;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+  }
+  .form-input {
+    margin: 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    
+    label {
+      color: #000000;
+      font-weight: 700;
+    }
+    select{
+      border: 1px solid #000000;
+      padding: 12px;
+      font-size: 14px;
+      border-radius: 5px;
+    }
+    input {
+      border: 1px solid #000000;
+      padding: 12px;
+      font-size: 14px;
+      border-radius: 5px;
+      
+      &:focus {
+        outline: none;
+      }
+    }
+    textarea {
+      padding: 10px;
+      height: 300px;
+      border-radius: 5px;
+      resize: none;
+      font-size: 17px;
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+  .list-address {
+    padding: 20px;
+    .form-radio {
+      margin: 10px;
+      display: flex;
+      .infor {
+        &:focus {
+          box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        }
+        cursor: pointer;
+        margin-left: 10px;
+        .address {
+          font-size: 20px;
+          font-weight: 700;
+          color: #000000;
+        }
+        .phone {
+          color: #000000;
+          font-weight: 800;
+        }
+      }
+    }
+    .booking {
+      width: 100%;
+      background-color: #000000;
+      padding: 15px;
+      font-size: 20px;
+      font-weight: 800;
+      color: white;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+    }
+  }
+}

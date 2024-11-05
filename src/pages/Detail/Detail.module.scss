@@ -1,0 +1,209 @@
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+.wrapper {
+  .navigate {
+    display: flex;
+    .link {
+      color: rgb(167, 167, 167);
+      font-weight: 700;
+    }
+    p {
+      color: rgb(55, 55, 55);
+      font-weight: 700;
+    }
+  }
+  .product {
+    margin-top: 10px;
+
+    display: flex;
+    .images {
+      width: 70%;
+      height: 100%;
+
+      padding: 10px;
+      .big-img {
+        width: 100%;
+        height: 500px;
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+      .small-img {
+        width: 100%;
+        margin-top: 5px;
+        height: 20%;
+        display: flex;
+        justify-content: space-between;
+        .img-click {
+          cursor: pointer;
+          border: 1px solid rgb(84, 84, 84);
+          width: 30%;
+          height: 150px;
+          &:hover {
+            box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+              rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+          }
+          img {
+            width: 100%;
+            height: 100%;
+          }
+        }
+      }
+    }
+    .action {
+      width: 70%;
+      height: 100%;
+
+      padding: 10px;
+      h3 {
+        color: #a08250;
+        font-size: 30px;
+      }
+      .percent {
+        margin: 10px 0px;
+        color: #eb9d17;
+        font-weight: 800;
+        font-size: 20px;
+      }
+      .old-price {
+        margin: 10px 0px;
+        color: #696969;
+        font-weight: 800;
+        font-size: 20px;
+        text-decoration: line-through;
+      }
+      .new-price {
+        margin: 10px 0px;
+        color: #dd0d0d;
+        font-weight: 800;
+        font-size: 35px;
+      }
+      .inventory {
+        margin: 10px 0px;
+        color: #00ab5a;
+        font-weight: 800;
+        font-size: 20px;
+      }
+      .quality {
+        display: flex;
+        button {
+          padding: 10px;
+          font-size: 18px;
+          font-weight: 800;
+        }
+        .number {
+          padding: 0px 13px;
+          width: 40px;
+          color: black;
+          align-items: center;
+          display: flex;
+          text-align: center;
+        }
+      }
+      .add-to-cart {
+        width: 100%;
+        margin: 10px 0px;
+        padding: 10px;
+        font-size: 20px;
+        background-color: #00ab5a;
+        color: white;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+      }
+      .booking {
+        width: 100%;
+        margin: 10px 0px;
+        padding: 10px;
+        font-size: 20px;
+        background-color: #a08250;
+        color: white;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+      }
+      .list-address {
+        padding: 15px;
+        border: 2px solid #eb9d17;
+        width: 100%;
+        border-radius: 20px;
+        .icon {
+          font-size: 20px;
+          color: #eb9d17;
+          font-weight: 600;
+        }
+        .address {
+          color: rgb(95, 95, 95);
+          font-weight: 700;
+          margin-left: 20px;
+        }
+        .phone {
+          color: rgb(95, 95, 95);
+          font-weight: 700;
+          margin-left: 20px;
+        }
+      }
+    }
+    .other-product {
+      width: 60%;
+      height: 100%;
+
+      padding: 10px;
+      h3 {
+        color: #a08250;
+        font-size: 30px;
+        text-align: center;
+        font-weight: 700;
+      }
+      .form-banner {
+        margin: 10px 0px;
+        width: 70%;
+        height: 200px;
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
+  }
+  .description {
+    margin: 10px 0px;
+    h3 {
+      color: #a08250;
+      font-weight: 700;
+      font-size: 30px;
+    }
+    .descrip {
+      width: 70%;
+      padding: 15px;
+      border: 2px solid #a08250;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      color: #696969;
+    }
+  }
+  .same {
+    margin: 40px 0px 10px 0px;
+    width: 100%;
+    h3 {
+      color: #a08250;
+      font-weight: 700;
+      font-size: 30px;
+    }
+    .list-product {
+      width: 100%;
+      display: flex;
+    }
+  }
+}

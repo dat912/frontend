@@ -4,10 +4,11 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { WebRoutes, AdminRoutes} from "./routes";
+import { WebRoutes, AdminRoutes, QuanLyRoutes } from "./routes";
 import DefaultLayout from "./components/DefaultLayout/DefaultLayout";
 import AdminLayout from "./components/AdminLayout/AdminLayout";
-
+import LoginAdmin from "./pages/Admin/Login/Login";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 
 function App() {
   return (
@@ -15,39 +16,37 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/" element={<Navigate to="/dang-nhap" />} />
-          {WebRoutes.map((route, i) => {
-            let Layout = DefaultLayout;
-            let Pages = route.component;
-            return (
-              <Route
-                index={i}
-                path={route.path}
-                element={
-                  <Layout>
-                    <Pages />
-                  </Layout>
-                }
-              />
-            );
-          })}
 
+          {/* Web Routes */}
+          {WebRoutes.map((route, i) => (
+            <Route
+              key={i}
+              path={route.path}
+              element={
+                <DefaultLayout>
+                  <route.component />
+                </DefaultLayout>
+              }
+            />
+          ))}
 
-          <Route path="/" element={<Navigate to="/dang-nhap" />} />
-          {AdminRoutes.map((route, i) => {
-            let Layout =AdminLayout;
-            let Pages = route.component;
-            return (
-              <Route
-                index={i}
-                path={route.path}
-                element={
-                  <Layout>
-                    <Pages />
-                  </Layout>
-                }
-              />
-            );
-          })}
+          {/* Login Route */}
+          <Route path="/admin" element={<LoginAdmin />} />
+
+          {/* Protected Admin Routes */}
+          {AdminRoutes.map((route, i) => (
+            <Route
+              key={i}
+              path={route.path}
+              element={
+                <ProtectedRoute>
+                  <AdminLayout>
+                    <route.component />
+                  </AdminLayout>
+                </ProtectedRoute>
+              }
+            />
+          ))}
         </Routes>
       </div>
     </Router>

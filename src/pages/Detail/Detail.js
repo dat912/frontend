@@ -35,33 +35,19 @@ export default function Detail() {
   };
   return (
     <div className={cx("wrapper")}>
-      <div className={cx("navigate")}>
+      {/* <div className={cx("navigate")}>
         <Link className={cx("link")}>Sản phẩm</Link>/
         <Link className={cx("link")}> Tông đơ </Link>/<p> Bộ Tông đơ</p>
-      </div>
+      </div> */}
       <div className={cx("product")}>
         <div className={cx("images")}>
           <div className={cx("big-img")}>
             <img src={image} alt="" />
           </div>
-          <div className={cx("small-img")}>
-            {imgs.map((i, index) => {
-              return (
-                <div
-                  key={index}
-                  className={cx("img-click")}
-                  onClick={() => handleImageClick(i.src)}
-                >
-                  <img src={i.src} alt="" />
-                </div>
-              );
-            })}
-          </div>
         </div>
         <div className={cx("action")}>
           <h3>Tong do</h3>
-          {/* <p className={cx("percent")}>Giam 15%</p> */}
-          {/* <p className={cx("old-price")}>600.000d</p> */}
+
           <p className={cx("new-price")}>600.000d</p>
           <p className={cx("inventory")}>Số lượng hàng còn: 10</p>
           <div className={cx("quality")}>
@@ -81,9 +67,8 @@ export default function Detail() {
             ĐẶT LỊCH CẮT TÓC
           </button>
           <div className={cx("list-address")}>
-
             <div className={cx("address-icon")}>
-              <p className={cx("icon")}>  
+              <p className={cx("icon")}>
                 <FontAwesomeIcon icon={faLocationDot} /> Chi nhanh 1
               </p>
               <p className={cx("address")}>19 Cao Lo</p>
@@ -97,20 +82,6 @@ export default function Detail() {
               <p className={cx("address")}>18 Cao Lo</p>
               <p className={cx("phone")}>099999999</p>
             </div>
-
-            
-          </div>
-        </div>
-        <div className={cx("other-product")}>
-          <h3>SẢN PHẨM KHÁC</h3>
-          <OtherProduct viewInside={() => navigate("/chi-tiet-san-pham")} />
-          <OtherProduct />
-
-          <div className={cx("form-banner")}>
-            <img src={banner} alt="" />
-          </div>
-          <div className={cx("form-banner")}>
-            <img src={banner} alt="" />
           </div>
         </div>
       </div>
@@ -131,13 +102,6 @@ export default function Detail() {
             Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit
             amet..", comes from a line in section 1.10.32.
           </p>
-        </div>
-      </div>
-      <div className={cx("same")}>
-        <h3>SẢN PHẨM CÙNG LOẠI</h3>
-        <div className={cx("list-product")}>
-          <Product />
-          
         </div>
       </div>
     </div>

@@ -183,7 +183,7 @@ export default function Booking() {
             <option value="">Chọn dịch vụ</option>
             {listDichVu.map((dichvu) => (
               <option key={dichvu.id} value={dichvu.id}>
-                {dichvu.tendichvu} : {dichvu.gia}đ
+                {dichvu.tendichvu}
               </option>
             ))}
           </select>

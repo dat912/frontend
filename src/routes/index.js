@@ -1,7 +1,7 @@
 import Booking from "../pages/Booking/Booking";
 import Cart from "../pages/Cart/Cart";
-import Detail from "../pages/Detail/Detail";
-import Error from "../pages/Error/Error";
+// import Detail from "../pages/Detail/Detail";
+
 import Forgot from "../pages/Forgot/Forgot";
 import Products from "../pages/Products/Products";
 import Signin from "../pages/Signin/Signin";
@@ -13,6 +13,7 @@ import Infor from "../pages/Infor/Infor";
 // import ProductAdmin from "../pages/Admin/Product/Product";
 import Home from "../pages/Admin/Home/Home";
 import Category from "../pages/Admin/Category/Category";
+import Product from "../pages/Admin/Product/Product";
 import AddCategory from "../pages/Admin/Category/AddCategory";
 import EditCategory from "../pages/Admin/Category/EditCategory";
 import Employee from "../pages/Admin/Employee/Employee";
@@ -20,10 +21,12 @@ import ChiNhanh from "../pages/Admin/ChiNhanh/ChiNhanh";
 import DichVu from "../pages/Admin/DichVu/DichVu";
 import Bookings from "../pages/Admin/Bookings/Bookings";
 import PaymentResult from "../pages/Admin/Bookings/PaymentResult";
+import Khachhang from "../pages/Admin/Khachhang/Khachhang";
+import LoginAdmin from "../pages/Admin/Login/Login";
 
 const WebRoutes = [
   { path: "/san-pham", component: Products },
-  { path: "/chi-tiet-san-pham", component: Detail },
+  // { path: "/chi-tiet-san-pham", component: Detail },
   { path: "/dang-nhap", component: Signin },
   { path: "/dang-ky-tai-khoan", component: Signup },
   { path: "/quen-mat-khau", component: Forgot },
@@ -38,6 +41,8 @@ const WebRoutes = [
 
 const AdminRoutes = [
   // { path: "/home", component: ProductAdmin },
+  { path: "/admin", component: LoginAdmin },
+  { path: "/product", component: Product },
   { path: "/category", component: Category },
   { path: "/addcategory", component: AddCategory },
   { path: "/editcategory", component: EditCategory },
@@ -46,6 +51,8 @@ const AdminRoutes = [
   { path: "/dichvu", component: DichVu },
   { path: "/booking", component: Bookings },
   { path: "/payment", component: PaymentResult },
+  { path: "/khachhang", component: Khachhang },
+
   { path: "/home", component: Home },
 ];
 

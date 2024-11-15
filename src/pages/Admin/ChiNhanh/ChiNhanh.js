@@ -36,11 +36,16 @@ const ChiNhanh = () => {
           "http://localhost:8080/addChiNhanh",
           currentChiNhanh
         );
-        alert("Thêm chi nhánh thành công");
-        console.log(response.data);
-        setShowModal(false);
-        resetForm();
-        window.location.reload();
+        if (response.data === "Tên chi nhánh đã tồn tại") {
+          // Hiển thị thông báo lỗi nếu email hoặc phone đã tồn tại
+          alert("Tên chi nhánh đã tồn tại.");
+        } else {
+          alert("Thêm chi nhánh thành công");
+          console.log(response.data);
+          setShowModal(false);
+          resetForm();
+          window.location.reload();
+        }
       } else {
         // Gửi yêu cầu PUT để cập nhật
         axios
@@ -113,7 +118,7 @@ const ChiNhanh = () => {
   return (
     <div className="container mt-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2 className="font-monospace fw-bolder">Chi Nhánh Management</h2>
+        <h2 className="font-monospace fw-bolder">Quản lý chi nhánh</h2>
         <button
           className="btn btn-success"
           onClick={() => {
@@ -127,7 +132,7 @@ const ChiNhanh = () => {
       </div>
 
       {/* Employee List */}
-      <div className="table-responsive">
+      <div className="table-responsive font-monospace ">
         <table className="table table-striped table-hover">
           <thead className="table-light">
             <tr>
@@ -170,7 +175,7 @@ const ChiNhanh = () => {
         style={{ display: showModal ? "block" : "none" }}
         tabIndex="-1"
       >
-        <div className="modal-dialog modal-dialog-centered">
+        <div className="modal-dialog modal-dialog-centered font-monospace fw-bolder">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title font-monospace fw-bolder">

@@ -11,35 +11,40 @@ export default function Signup() {
   const handleSwitch = () => {
     setShow(!show);
   };
-  
-  const [error, setError]=useState({})
-  const [values, setValues] =useState({
-    email: '',
-    ten: '',
-    password: '',
-    phone: ''
-  })
-  
 
-  const handleSubmit = (e)=>{
+  const [error, setError] = useState({});
+  const [values, setValues] = useState({
+    email: "",
+    ten: "",
+    password: "",
+    phone: "",
+  });
+
+  const handleSubmit = (e) => {
     e.preventDefault();
     setError(Validation(values));
-    if(error.email ==="" && error.phone ==="" && error.password ==="" ){
-    axios.post('http://localhost:8080/signup', values)
-    .then(res=> {
-        console.log(res);
-        navigate('/dang-nhap')
-        alert("Dang ky thanh cong");
-    })
-    .catch(err => console.log(err))
+    if (error.email === "" && error.phone === "" && error.password === "") {
+      axios
+        .post("http://localhost:8080/signup", values)
+        .then((res) => {
+          if (res.data === "Email or phone already exists") {
+            alert("Email or phone already exists");
+          } else {
+            // Nếu đăng ký thành công
+            console.log(res);
+            alert("Đăng ký thành công");
+            navigate("/dang-nhap");
+          }
+        })
+        .catch((err) => console.log(err));
     }
-  }
+  };
 
   // const handleSubmit = async (e) => {
   //   e.preventDefault();
   //   const validationErrors = Validation(values);
   //   setError(validationErrors);
-  
+
   //   if (Object.keys(validationErrors).length === 0) {
   //     try {
   //       const response = await axios.post('http://localhost:8080/signup', values);
@@ -60,9 +65,6 @@ export default function Signup() {
   //   }
   // };
 
- 
-
-
   return (
     <div className={cx("wrapper")}>
       <div className={cx("form-img")}>
@@ -77,55 +79,71 @@ export default function Signup() {
         <h3>ĐĂNG KÝ TÀI KHOẢN</h3>
 
         <form action="" onSubmit={handleSubmit}>
-        <div className={cx("form-input")}>
-          <label htmlFor="email">Email</label>
-          <input type="email" placeholder="Email" name="email" id="" onChange={e=>setValues({...values,email:e.target.value})} />
-          {error.email && <span>{error.email}</span>}
-        </div>
-        <div className={cx("form-input")}>
-          <label htmlFor="ten">Tên</label>
-          <input type="text" placeholder="Tên" name="ten" id="" onChange={e=>setValues({...values,ten:e.target.value})} />
-          
-        </div>
+          <div className={cx("form-input")}>
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              placeholder="Email"
+              name="email"
+              id=""
+              onChange={(e) => setValues({ ...values, email: e.target.value })}
+            />
+            {error.email && <span>{error.email}</span>}
+          </div>
+          <div className={cx("form-input")}>
+            <label htmlFor="ten">Tên</label>
+            <input
+              type="text"
+              placeholder="Tên"
+              name="ten"
+              id=""
+              onChange={(e) => setValues({ ...values, ten: e.target.value })}
+            />
+          </div>
 
-        <div className={cx("form-input")}>
-          <label htmlFor="phone">Số điện thoại</label>
-          <input type="phone" placeholder="Số điện thoại" name="phone" id="" onChange={e=>setValues({...values,phone:e.target.value})} />
-          {error.phone && <span>{error.phone}</span>}
-        </div>
-        <div className={cx("form-input")}>
-          <label htmlFor="password">Mật khẩu</label>
-          <input
-            type={show === false ? "password" : "text"}
-            name="password"
-            placeholder="Mật khẩu"
-            id=""
-            onChange={e=>setValues({...values,password:e.target.value})}
-          />
-          {error.password && <span>{error.password}</span>}
-          <div className={cx("action")}>
-            <div className={cx("checkbox")}>
-              <p onClick={handleSwitch}>
-                {show === false ? "Hiển thị mật khẩu" : "Ẩn mật khẩu"}
-              </p>
+          <div className={cx("form-input")}>
+            <label htmlFor="phone">Số điện thoại</label>
+            <input
+              type="phone"
+              placeholder="Số điện thoại"
+              name="phone"
+              id=""
+              onChange={(e) => setValues({ ...values, phone: e.target.value })}
+            />
+            {error.phone && <span>{error.phone}</span>}
+          </div>
+          <div className={cx("form-input")}>
+            <label htmlFor="password">Mật khẩu</label>
+            <input
+              type={show === false ? "password" : "text"}
+              name="password"
+              placeholder="Mật khẩu"
+              id=""
+              onChange={(e) =>
+                setValues({ ...values, password: e.target.value })
+              }
+            />
+            {error.password && <span>{error.password}</span>}
+            <div className={cx("action")}>
+              <div className={cx("checkbox")}>
+                <p onClick={handleSwitch}>
+                  {show === false ? "Hiển thị mật khẩu" : "Ẩn mật khẩu"}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-        
-        <div className={cx("form-btn")}>
-          <button  className={cx("btn-signin")}>ĐĂNG KÝ TÀI KHOẢN</button>
-          <button
-            className={cx("btn-signup")}
-            onClick={() => navigate("/dang-nhap")}
-          >
-            ĐĂNG NHẬP
-          </button>
-         
-        </div>
+
+          <div className={cx("form-btn")}>
+            <button className={cx("btn-signin")}>ĐĂNG KÝ TÀI KHOẢN</button>
+            <button
+              className={cx("btn-signup")}
+              onClick={() => navigate("/dang-nhap")}
+            >
+              ĐĂNG NHẬP
+            </button>
+          </div>
         </form>
-        
       </div>
-      
     </div>
   );
 }

@@ -1,11 +1,9 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-
+//import { useNavigate } from "react-router-dom";
 const Employee = () => {
   const [employees, setEmployees] = useState([]);
-
   const [showModal, setShowModal] = useState(false);
-
   const [modalMode, setModalMode] = useState("add"); // 'add' or 'edit'
   const [currentEmployee, setCurrentEmployee] = useState({
     ten: "",
@@ -61,11 +59,17 @@ const Employee = () => {
           "http://localhost:8080/addEmployee",
           currentEmployee
         );
-        alert("Thêm nhân viên thành công");
-        console.log(response.data);
-        setShowModal(false);
-        resetForm();
-        window.location.reload();
+        if (response.data === "Email hoặc phone đã tồn tại") {
+          // Hiển thị thông báo lỗi nếu email hoặc phone đã tồn tại
+          alert("Email hoặc số điện thoại đã tồn tại, vui lòng kiểm tra lại.");
+        } else {
+          // Nếu thêm thành công, hiển thị thông báo và xử lý tiếp
+          alert("Thêm nhân viên thành công");
+          console.log(response.data);
+          setShowModal(false);
+          resetForm();
+          window.location.reload();
+        }
       } else {
         // Gửi yêu cầu PUT để cập nhật
         axios
@@ -156,7 +160,7 @@ const Employee = () => {
       </div>
 
       {/* Employee List */}
-      <div className="table-responsive">
+      <div className="table-responsive font-monospace ">
         <table className="table table-striped table-hover">
           <thead className="table-light">
             <tr>
@@ -165,6 +169,7 @@ const Employee = () => {
               <th>Email</th>
               <th>Phone</th>
               <th>Chi Nhanh</th>
+              <th>Vai Trò</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -176,6 +181,7 @@ const Employee = () => {
                 <td>{e.email}</td>
                 <td>{e.phone}</td>
                 <td>{e.tenchinhanh}</td>
+                <td>{e.tenVaiTro}</td>
                 <td>
                   <button
                     className="btn btn-info btn-sm me-2"
@@ -202,7 +208,7 @@ const Employee = () => {
         style={{ display: showModal ? "block" : "none" }}
         tabIndex="-1"
       >
-        <div className="modal-dialog modal-dialog-centered">
+        <div className="modal-dialog modal-dialog-centered font-monospace fw-bolder">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title font-monospace fw-bolder">

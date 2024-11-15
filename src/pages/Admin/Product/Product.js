@@ -1,9 +1,314 @@
-import React from 'react'
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 
-function Product() {
+const Product = () => {
+  const [showModal, setShowModal] = useState(false);
+  const [Product, setProduct] = useState([]);
+  const [listCategory, setListCategory] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [modalMode, setModalMode] = useState("add"); // 'add' or 'edit'
+  const [currentProduct, setCurrentProduct] = useState({
+    ten: "",
+    img: "",
+    gia: "",
+    chitiet: "",
+    category_id: "",
+  });
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080/getProductAll")
+      .then((result) => {
+        if (result.data) {
+          setProduct(result.data);
+        } else {
+          alert(result.data);
+        }
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
+  useEffect(() => {
+    axios.get("http://localhost:8080/getCategoryAll").then((response) => {
+      setListCategory(response.data);
+    });
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log(currentProduct);
+
+    try {
+      if (modalMode === "add") {
+        const response = await axios.post(
+          "http://localhost:8080/addProduct",
+          currentProduct
+        );
+        if (response.data === "Tên Product đã tồn tại") {
+          alert("Tên Product đã tồn tại.");
+        } else {
+          alert("Thêm Product thành công");
+          console.log(response.data);
+          setShowModal(false);
+          resetForm();
+          window.location.reload();
+        }
+      } else {
+        // Gửi yêu cầu PUT để cập nhật
+        axios
+          .put(
+            `http://localhost:8080/editProduct/${currentProduct.id}`,
+            currentProduct
+          )
+          .then((result) => {
+            if (result.data.Status) {
+              alert("Cập nhật thành công!");
+
+              setShowModal(false);
+              resetForm();
+              window.location.reload();
+            } else {
+              alert(result.data.Error);
+            }
+          })
+          .catch((err) => console.log(err));
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Có lỗi xảy ra khi xử lý yêu cầu. Vui lòng thử lại.");
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm("Bạn có chắc chắn muốn xoá không?")) {
+      try {
+        const response = await axios.delete(
+          `http://localhost:8080/deleteProduct/${id}`
+        );
+        if (response.data) {
+          alert("Xoá Product thành công!");
+          setProduct(Product.filter((emp) => emp.id !== id));
+        }
+      } catch (error) {
+        if (error.response) {
+          if (error.response.status >= 500) {
+            alert("Lỗi hệ thống. Vui lòng thử lại sau!");
+          } else {
+            alert(error.response.data.message || "Có lỗi xảy ra khi xóa");
+          }
+        } else {
+          alert("Không thể kết nối đến server");
+        }
+        console.error("Error deleting:", error);
+      }
+    }
+  };
+
+  const handleEdit = (Product) => {
+    setCurrentProduct(Product);
+    setModalMode("edit");
+    setShowModal(true);
+  };
+
+  const resetForm = () => {
+    setCurrentProduct({
+      ten: "",
+      img: "",
+      gia: "",
+      chitiet: "",
+      category_id: "",
+    });
+  };
+
   return (
-    <div>Product</div>
-  )
-}
+    <div className="container mt-4">
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h2 className="font-monospace fw-bolder">Quản lý Product</h2>
+        <button
+          className="btn btn-success"
+          onClick={() => {
+            setModalMode("add");
+            resetForm();
+            setShowModal(true);
+          }}
+        >
+          Add Product
+        </button>
+      </div>
 
-export default Product
+      <div className="table-responsive font-monospace fw-bolder">
+        <table className="table table-striped table-hover">
+          <thead className="table-light">
+            <tr>
+              <th>ID</th>
+              <th>Tên Product</th>
+              <th>Hình</th>
+              <th>Giá</th>
+              <th>Chi tiết</th>
+              <th>Category</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Product.map((e, index) => (
+              <tr key={index}>
+                <td>{index + 1}</td>
+                <td>{e.ten}</td>
+                <td>
+                  <img src={e.img} alt={e.ten} width="70" />
+                </td>
+                <td>{e.gia}đ</td>
+                <td>{e.chitiet}</td>
+                <td>{e.category_name}</td>
+
+                <td>
+                  <button
+                    className="btn btn-info btn-sm mb-2"
+                    onClick={() => handleEdit(e)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="btn btn-warning btn-sm"
+                    onClick={() => handleDelete(e.id)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div
+        className={`modal fade ${showModal ? "show" : ""}`}
+        style={{ display: showModal ? "block" : "none" }}
+        tabIndex="-1"
+      >
+        <div className="modal-dialog modal-dialog-centered font-monospace fw-bolder">
+          <div className="modal-content ">
+            <div className="modal-header">
+              <h5 className="modal-title ">
+                {modalMode === "add" ? "Add Product" : "Edit Product"}
+              </h5>
+              <button
+                type="button"
+                className="btn-close"
+                onClick={() => setShowModal(false)}
+              ></button>
+            </div>
+            <div className="modal-body">
+              <form onSubmit={handleSubmit}>
+                <div className="mb-3">
+                  <label className="form-label">Tên Product</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={currentProduct.ten}
+                    onChange={(e) =>
+                      setCurrentProduct({
+                        ...currentProduct,
+                        ten: e.target.value,
+                      })
+                    }
+                    placeholder="Enter tên Product"
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label className="form-label">Img</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={currentProduct.img}
+                    onChange={(e) =>
+                      setCurrentProduct({
+                        ...currentProduct,
+                        img: e.target.value,
+                      })
+                    }
+                    placeholder="Enter img Product"
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label className="form-label">Giá</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={currentProduct.gia}
+                    onChange={(e) =>
+                      setCurrentProduct({
+                        ...currentProduct,
+                        gia: e.target.value,
+                      })
+                    }
+                    placeholder="Enter giá Product"
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label className="form-label">Chi tiết</label>
+                  <textarea
+                    type="text"
+                    className="form-control"
+                    value={currentProduct.chitiet}
+                    onChange={(e) =>
+                      setCurrentProduct({
+                        ...currentProduct,
+                        chitiet: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label className="form-label">Category</label>
+                  <select
+                    className="form-select"
+                    name="category_id"
+                    value={currentProduct.category_id}
+                    onChange={(e) => {
+                      setSelectedCategory(e.target.value);
+                      setCurrentProduct({
+                        ...currentProduct,
+                        category_id: e.target.value,
+                      });
+                    }}
+                    required
+                  >
+                    <option value="" disabled>
+                      Chọn Category
+                    </option>
+                    {listCategory.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.ten}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="modal-footer px-0 pb-0">
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={() => setShowModal(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button type="submit" className="btn btn-primary">
+                    {modalMode === "add" ? "Add Product" : "Update Product"}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        {showModal && <div className="modal fade show"></div>}
+      </div>
+    </div>
+  );
+};
+
+export default Product;

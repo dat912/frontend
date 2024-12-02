@@ -159,6 +159,13 @@ body {
   .card:nth-child(4) {
     background-color: #d50000;
   }
+
+  .card:nth-child(5) {
+    background-color: #00d51c;
+  }
+  .card:nth-child(6) {
+    background-color: #006ed5;
+  }
   
   .card-inner {
     display: flex;

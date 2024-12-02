@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Modal, Button } from "react-bootstrap"; // Import Modal and Button from react-bootstrap
 import { Link, useLocation, useNavigate } from "react-router-dom";
-
+import numeral from "numeral";
 const Bookings = () => {
   const [bookings, setBookings] = useState([]);
   const [currentStatus, setCurrentStatus] = useState("Chờ xác nhận");
@@ -202,7 +202,11 @@ const Bookings = () => {
                 <td>{booking.TenDichVu}</td>
                 <td>{booking.TenNhanVien}</td>
                 <td>{booking.TenUser}</td>
-                <td>{booking.TongTien}</td>
+                <td>
+                  {numeral(booking.TongTien).format("0,0").replace(/,/g, ".")}{" "}
+                  VNĐ
+                </td>
+
                 <td>{booking.TenTrangThai}</td>
                 <td>{renderActionButtons(booking)}</td>
               </tr>
@@ -247,7 +251,8 @@ const Bookings = () => {
                     <strong>Giờ:</strong> {e.Gio}
                   </p>
                   <p>
-                    <strong>Tổng tiền:</strong> {e.TongTien}đ
+                    <strong>Tổng tiền:</strong>{" "}
+                    {numeral(e.TongTien).format("0,0").replace(/,/g, ".")} VNĐ
                   </p>
                 </tr>
               ))}

@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-
+import numeral from "numeral";
 const Product = () => {
   const [showModal, setShowModal] = useState(false);
   const [Product, setProduct] = useState([]);
@@ -143,6 +143,7 @@ const Product = () => {
               <th>ID</th>
               <th>Tên Product</th>
               <th>Hình</th>
+              <th>Số lượng</th>
               <th>Giá</th>
               <th>Chi tiết</th>
               <th>Category</th>
@@ -157,7 +158,9 @@ const Product = () => {
                 <td>
                   <img src={e.img} alt={e.ten} width="70" />
                 </td>
-                <td>{e.gia}đ</td>
+                <td>{e.soluong}</td>
+                <td> {numeral(e.gia).format("0,0").replace(/,/g, ".")}</td>
+
                 <td>{e.chitiet}</td>
                 <td>{e.category_name}</td>
 
@@ -229,6 +232,22 @@ const Product = () => {
                       })
                     }
                     placeholder="Enter img Product"
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label className="form-label">Số lượng</label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    value={currentProduct.soluong}
+                    onChange={(e) =>
+                      setCurrentProduct({
+                        ...currentProduct,
+                        soluong: e.target.value,
+                      })
+                    }
+                    placeholder="Enter số lượng Product"
                   />
                 </div>
 

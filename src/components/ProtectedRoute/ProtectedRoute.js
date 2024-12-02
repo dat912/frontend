@@ -21,10 +21,18 @@ const ProtectedRoute = ({ children }) => {
       "/chinhanh",
       "/dichvu",
       "/booking",
+      "/hoadon",
       "/payment",
       "/khachhang",
     ],
-    quanly: ["/home", "/chinhanh", "/dichvu", "/booking", "/khachhang"],
+    quanly: [
+      "/home",
+      "/chinhanh",
+      "/dichvu",
+      "/booking",
+      "/khachhang",
+      "/hoadon",
+    ],
   };
 
   // Kiểm tra xem route hiện tại có được phép với role của user không

@@ -5,6 +5,7 @@ const Khachhang = () => {
   const [user, setUser] = useState([]);
 
   const [showModal, setShowModal] = useState(false);
+  const [showModalCreate, setShowModalCreate] = useState(false);
 
   const [modalMode, setModalMode] = useState("add"); // 'add' or 'edit'
   const [currentUser, setCurrentUser] = useState({
@@ -114,6 +115,18 @@ const Khachhang = () => {
     });
   };
 
+  const handleCreateOrder = (user) => {
+    setShowModalCreate(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModalCreate(false);
+    // setOrder((prevOrder) => ({
+    //   ...prevOrder,
+    //   items: [], // Reset items khi đóng modal
+    // }));
+  };
+
   return (
     <div className="container mt-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
@@ -121,6 +134,16 @@ const Khachhang = () => {
       </div>
 
       <div className="table-responsive font-monospace ">
+        <button
+          className="btn btn-success btn-sm me-2"
+          onClick={() => {
+            setModalMode("add");
+            resetForm();
+            setShowModal(true);
+          }}
+        >
+          Add Khách hàng
+        </button>
         <table className="table table-striped table-hover">
           <thead className="table-light">
             <tr>
@@ -140,16 +163,6 @@ const Khachhang = () => {
                 <td>{e.phone}</td>
                 <td>
                   <button
-                    className="btn btn-success btn-sm me-2"
-                    onClick={() => {
-                      setModalMode("add");
-                      resetForm();
-                      setShowModal(true);
-                    }}
-                  >
-                    Add
-                  </button>
-                  <button
                     className="btn btn-info btn-sm me-2"
                     onClick={() => handleEdit(e)}
                   >
@@ -157,10 +170,22 @@ const Khachhang = () => {
                   </button>
 
                   <button
-                    className="btn btn-warning btn-sm"
+                    className="btn btn-warning btn-sm me-2"
                     onClick={() => handleDelete(e.id)}
                   >
                     Delete
+                  </button>
+                  <button
+                    className="btn btn-primary btn-sm me-2"
+                    onClick={() => handleCreateOrder(user)}
+                  >
+                    Tạo đơn hàng
+                  </button>
+                  <button
+                    className="btn btn-primary btn-sm"
+                    // onClick={() => handleDelete(e.id)}
+                  >
+                    Tạo lịch
                   </button>
                 </td>
               </tr>
@@ -265,6 +290,154 @@ const Khachhang = () => {
         </div>
         {showModal && <div className="modal fade show"></div>}
       </div>
+
+      {showModalCreate && (
+        <div className="modal d-block" tabIndex="-1" role="dialog">
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title font-monospace fw-bolder">
+                  Create Order for
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                  onClick={() => handleCloseModal(false)}
+                ></button>
+              </div>
+
+              <div className="modal-body">
+                <form>
+                  <div className="form-group">
+                    <label htmlFor="name">Name </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="name"
+                      // value={selectedUser.name}
+                      // onChange={(e) =>
+                      //   setOrder({ ...order, name: e.target.value })
+                      // }
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="phone">Phone</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="phone"
+                      // value={selectedUser.phone}
+                      // onChange={(e) =>
+                      //   setOrder({ ...order, phone: e.target.value })
+                      // }
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="email">Email</label>
+                    <input
+                      type="email"
+                      className="form-control"
+                      id="email"
+                      // value={selectedUser.email}
+                      // onChange={(e) =>
+                      //   setOrder({ ...order, email: e.target.value })
+                      // }
+                    />
+                  </div>
+                  {/* <div className="form-group">
+                    <label htmlFor="address">Address</label>
+                    <textarea
+                      className="form-control"
+                      id="address"
+                      value={selectedUser.address}
+                      onChange={(e) =>
+                        setOrder({ ...order, address: e.target.value })
+                      }
+                    ></textarea>
+                  </div> */}
+                  <h3 className="pt-3 font-monospace fw-bolder">Sản phẩm</h3>
+                  <table className="table">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {/* {products.map((product, index) => (
+                        <tr key={index}>
+                          <td>{product.name}</td>
+                          <td>{product.price}</td>
+                          <td>
+                            <button
+                              type="button"
+                              className="btn btn-primary"
+                              onClick={() => handleAddToOrder(product)}
+                            >
+                              Add
+                            </button>
+                          </td>
+                        </tr>
+                      ))} */}
+                    </tbody>
+                  </table>
+                  <h3>Order Summary</h3>
+                  <table className="table">
+                    <thead>
+                      <tr>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {/* {order.items.map((item, index) => (
+                        <tr key={index}>
+                          <td>{item.name}</td>
+                          <td>${item.price}</td>
+                          <td>{item.quantity}</td>
+                          <td>${item.price * item.quantity}</td>
+                          <td>
+                            <button
+                              type="button"
+                              className="btn btn-danger btn-sm"
+                              onClick={() => handleRemoveFromOrder(item.id)}
+                            >
+                              Remove
+                            </button>
+                          </td>
+                        </tr>
+                      ))} */}
+                    </tbody>
+                  </table>
+                </form>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  data-dismiss="modal"
+                  onClick={() => handleCloseModal(false)}
+                >
+                  Close
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  // onClick={handleSubmitOrder}
+                >
+                  Submit Order
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

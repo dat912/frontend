@@ -14,7 +14,7 @@ const ChiNhanh = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/getChiNhanhAll")
+      .get("http://localhost:8080/getCountNhanVien")
       .then((result) => {
         if (result.data) {
           setChiNhanhs(result.data);
@@ -31,13 +31,11 @@ const ChiNhanh = () => {
 
     try {
       if (modalMode === "add") {
-        // Gửi yêu cầu POST để thêm mới
         const response = await axios.post(
           "http://localhost:8080/addChiNhanh",
           currentChiNhanh
         );
         if (response.data === "Tên chi nhánh đã tồn tại") {
-          // Hiển thị thông báo lỗi nếu email hoặc phone đã tồn tại
           alert("Tên chi nhánh đã tồn tại.");
         } else {
           alert("Thêm chi nhánh thành công");
@@ -47,7 +45,6 @@ const ChiNhanh = () => {
           window.location.reload();
         }
       } else {
-        // Gửi yêu cầu PUT để cập nhật
         axios
           .put(
             `http://localhost:8080/editChiNhanh/${currentChiNhanh.id}`,
@@ -75,7 +72,6 @@ const ChiNhanh = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Bạn có chắc chắn muốn xoá chi nhánh này không?")) {
       try {
-        // Chú ý: Trước đây bạn đang dùng employees.id thay vì id được truyền vào
         const response = await axios.delete(
           `http://localhost:8080/deleteChiNhanh/${id}`
         );
@@ -88,7 +84,7 @@ const ChiNhanh = () => {
       } catch (error) {
         if (error.response) {
           if (error.response.status >= 500) {
-            alert("Lỗi hệ thống. Vui lòng thử lại sau!");
+            alert("Đã có nhân viên trên chi nhánh không thể xóa! ");
           } else {
             alert(
               error.response.data.message || "Có lỗi xảy ra khi xóa chi nhánh"
@@ -146,7 +142,9 @@ const ChiNhanh = () => {
             {chinhanhs.map((e, index) => (
               <tr key={index}>
                 <td>{index + 1}</td>
-                <td>{e.tenchinhanh}</td>
+                <td>
+                  {e.tenchinhanh} ({e.soluong || 0} nhân viên)
+                </td>
                 <td>{e.diachi}</td>
 
                 <td>

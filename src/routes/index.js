@@ -20,7 +20,7 @@ import Employee from "../pages/Admin/Employee/Employee";
 import ChiNhanh from "../pages/Admin/ChiNhanh/ChiNhanh";
 import DichVu from "../pages/Admin/DichVu/DichVu";
 import Bookings from "../pages/Admin/Bookings/Bookings";
-import PaymentResult from "../pages/Admin/Bookings/PaymentResult";
+import HoaDon from "../pages/Admin/HoaDon/HoaDon";
 import Khachhang from "../pages/Admin/Khachhang/Khachhang";
 import LoginAdmin from "../pages/Admin/Login/Login";
 
@@ -50,7 +50,8 @@ const AdminRoutes = [
   { path: "/chinhanh", component: ChiNhanh },
   { path: "/dichvu", component: DichVu },
   { path: "/booking", component: Bookings },
-  { path: "/payment", component: PaymentResult },
+  { path: "/hoadon", component: HoaDon },
+
   { path: "/khachhang", component: Khachhang },
 
   { path: "/home", component: Home },

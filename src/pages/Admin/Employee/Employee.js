@@ -60,10 +60,8 @@ const Employee = () => {
           currentEmployee
         );
         if (response.data === "Email hoặc phone đã tồn tại") {
-          // Hiển thị thông báo lỗi nếu email hoặc phone đã tồn tại
           alert("Email hoặc số điện thoại đã tồn tại, vui lòng kiểm tra lại.");
         } else {
-          // Nếu thêm thành công, hiển thị thông báo và xử lý tiếp
           alert("Thêm nhân viên thành công");
           console.log(response.data);
           setShowModal(false);
@@ -72,23 +70,25 @@ const Employee = () => {
         }
       } else {
         // Gửi yêu cầu PUT để cập nhật
-        axios
-          .put(
-            `http://localhost:8080/editEmployee/${currentEmployee.id}`,
-            currentEmployee
-          )
-          .then((result) => {
-            if (result.data.Status) {
-              alert("Cập nhật thành công!");
+        const response = await axios.put(
+          `http://localhost:8080/editEmployee/${currentEmployee.employee_id}`,
+          {
+            ten: currentEmployee.ten,
+            email: currentEmployee.email,
+            phone: currentEmployee.phone,
+            id_vaitro: currentEmployee.id_vaitro,
+            idchinhanh: currentEmployee.idchinhanh,
+          }
+        );
 
-              setShowModal(false);
-              resetForm();
-              window.location.reload();
-            } else {
-              alert(result.data.Error);
-            }
-          })
-          .catch((err) => console.log(err));
+        if (response.data.Status) {
+          alert("Cập nhật nhân viên thành công!");
+          setShowModal(false);
+          resetForm();
+          window.location.reload();
+        } else {
+          alert(response.data.Error || "Có lỗi xảy ra khi cập nhật nhân viên");
+        }
       }
     } catch (error) {
       console.error("Error:", error);
@@ -97,7 +97,7 @@ const Employee = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Bạn có chắc chắn muốn xoá nhân viên này không?")) {
+    if (window.confirm("Bạn có chắc chắn muốn xoá không?")) {
       try {
         // Chú ý: Trước đây bạn đang dùng employees.id thay vì id được truyền vào
         const response = await axios.delete(
@@ -105,18 +105,17 @@ const Employee = () => {
         );
 
         if (response.data) {
-          alert("Xoá nhân viên thành công!");
+          alert("Xoá  thành công!");
           // Cập nhật state để remove nhân viên đã xóa
-          setEmployees(employees.filter((emp) => emp.employee_id !== id));
+          setEmployees(employees.filter((emp) => emp.id !== id));
+          window.location.reload();
         }
       } catch (error) {
         if (error.response) {
           if (error.response.status >= 500) {
             alert("Lỗi hệ thống. Vui lòng thử lại sau!");
           } else {
-            alert(
-              error.response.data.message || "Có lỗi xảy ra khi xóa nhân viên"
-            );
+            alert(error.response.data.message || "Có lỗi xảy ra khi xóa ");
           }
         } else {
           alert("Không thể kết nối đến server");
@@ -295,7 +294,6 @@ const Employee = () => {
                     name="idchinhanh"
                     value={currentEmployee.idchinhanh}
                     onChange={(e) => {
-                      setSelectedChiNhanh(e.target.value);
                       handleInputChange(e);
                     }}
                     required
@@ -316,7 +314,6 @@ const Employee = () => {
                     name="id_vaitro"
                     value={currentEmployee.id_vaitro}
                     onChange={(e) => {
-                      setSelectedVaitro(e.target.value);
                       handleInputChange(e);
                     }}
                     required

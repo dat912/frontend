@@ -39,12 +39,32 @@ export const ShoppingContextProvider = ({ children }) => {
   };
 
   // Hàm để tăng số lượng sản phẩm trong giỏ hàng
-  const increaseQty = (id) => {
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id ? { ...item, qty: item.qty + 1 } : item
-      )
-    );
+  const increaseQty = async (productId) => {
+    try {
+      // Gửi yêu cầu API để lấy số lượng còn lại của sản phẩm
+      const response = await fetch(
+        `http://localhost:8080/api/product/${productId}`
+      );
+      const product = await response.json();
+
+      if (product && product.soluong) {
+        // Kiểm tra nếu số lượng trong giỏ hàng < số lượng trong db
+        setCartItems((prevItems) =>
+          prevItems.map((item) =>
+            item.id === productId
+              ? {
+                  ...item,
+                  qty: item.qty < product.soluong ? item.qty + 1 : item.qty, // Tăng số lượng nếu có đủ sản phẩm trong kho
+                }
+              : item
+          )
+        );
+      } else {
+        console.error("Không thể lấy thông tin sản phẩm.");
+      }
+    } catch (error) {
+      console.error("Lỗi khi kiểm tra số lượng sản phẩm:", error);
+    }
   };
 
   // Hàm để giảm số lượng sản phẩm trong giỏ hàng

@@ -4,7 +4,7 @@ import style from "./Booking.module.scss";
 import classNames from "classnames/bind";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-
+import numeral from "numeral";
 const cx = classNames.bind(style);
 
 export default function Booking() {
@@ -191,7 +191,11 @@ export default function Booking() {
 
         <div className={cx("form-input")}>
           <label>Tổng tiền</label>
-          <input type="text" value={`${tongtien}đ`} readOnly />
+          <input
+            type="text"
+            value={`${numeral(tongtien).format("0,0").replace(/,/g, ".")} VNĐ`}
+            readOnly
+          />
         </div>
 
         <div className={cx("form-input")}>

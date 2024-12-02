@@ -35,6 +35,7 @@ export default function Header() {
     { path: "/dichvu", label: "Dịch vụ" },
     { path: "/employee", label: "Nhân viên" },
     { path: "/booking", label: "Thông tin lịch" },
+    { path: "/hoadon", label: "Thông tin hóa đơn" },
     { path: "/khachhang", label: "Thông tin khách hàng" },
   ];
 
@@ -43,6 +44,7 @@ export default function Header() {
     { path: "/chinhanh", label: "Chi nhánh" },
     { path: "/dichvu", label: "Dịch vụ" },
     { path: "/booking", label: "Thông tin lịch" },
+    { path: "/hoadon", label: "Thông tin hóa đơn" },
     { path: "/khachhang", label: "Thông tin khách hàng" },
   ];
 

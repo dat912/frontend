@@ -11,6 +11,7 @@ import {
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import numeral from "numeral";
 
 export default function Infor() {
   const [activeTab, setActiveTab] = useState("profile");
@@ -22,8 +23,26 @@ export default function Infor() {
   });
 
   const [bookings, setBookings] = useState([]);
-
+  const [hoadon, setHoadon] = useState([]);
   const userId = localStorage.getItem("id");
+
+  const groupedHoaDon = hoadon.reduce((acc, item) => {
+    if (!acc[item.madonhang]) {
+      acc[item.madonhang] = {
+        ...item,
+        products: [],
+      };
+    }
+    acc[item.madonhang].products.push({
+      tensanpham: item.tensanpham,
+      soluong: item.soluong,
+      gia: item.gia,
+      tongtien: item.tongtien,
+    });
+    return acc;
+  }, {});
+
+  const hoadonList = Object.values(groupedHoaDon);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -37,6 +56,12 @@ export default function Infor() {
           `http://localhost:8080/api/bookings/${userId}`
         );
         setBookings(response2.data);
+
+        setUser(response.data);
+        const response3 = await axios.get(
+          `http://localhost:8080/api/hoadon/${userId}`
+        );
+        setHoadon(response3.data);
       } catch (error) {
         console.error("Lỗi khi lấy dữ liệu người dùng:", error);
       }
@@ -63,7 +88,7 @@ export default function Infor() {
   return (
     <div className="min-vh-100 bg-light">
       <main className="container py-4">
-        <div className="row g-4">
+        <div className="row g-4  ">
           {/* Sidebar */}
           <div className="col-md-3">
             <div className="card shadow-sm bg-white">
@@ -202,7 +227,7 @@ export default function Infor() {
                   )}
                 </div>
               </div>
-            ) : (
+            ) : activeTab === "bookings" ? (
               <div className="card shadow-sm bg-white ">
                 <div className="card-header py-3">
                   <h5 className="card-title mb-0">Lịch đặt của tôi</h5>
@@ -249,7 +274,10 @@ export default function Infor() {
                               <div className="d-flex align-items-center gap-2">
                                 <DollarSign className="text-success" />
                                 <span className="fw-bold text-success">
-                                  {booking.TongTien.toLocaleString("vi-VN")} đ
+                                  {numeral(booking.TongTien)
+                                    .format("0,0")
+                                    .replace(/,/g, ".")}{" "}
+                                  VNĐ
                                 </span>
                               </div>
                             </div>
@@ -286,6 +314,125 @@ export default function Infor() {
                       </div>
                     </div>
                   ))}
+                </div>
+              </div>
+            ) : (
+              <div>
+                <div className="card shadow-sm bg-white ">
+                  <div className="card-header py-3">
+                    <h5 className="card-title mb-0">Hóa đơn của tôi</h5>
+                  </div>
+                  <div className="card-body">
+                    {hoadonList.map((hoadon) => (
+                      <div
+                        key={hoadon.id}
+                        className="card border bg-light mb-3"
+                      >
+                        <div className="card-body">
+                          <div className="row align-items-center">
+                            <div className="col">
+                              <div className="d-flex flex-column gap-2">
+                                <div className="d-flex align-items-center gap-2">
+                                  <span className="text-dark">
+                                    <strong>Mã đơn hàng:</strong>{" "}
+                                    {hoadon.madonhang}
+                                  </span>
+                                </div>
+                                <div className="d-flex align-items-center gap-2">
+                                  <span className="text-dark">
+                                    {hoadon.products.map((product, i) => (
+                                      <div key={i}>
+                                        <strong>Tên sản phẩm:</strong>{" "}
+                                        {product.tensanpham} <br />
+                                        <strong>Số lượng:</strong>{" "}
+                                        {product.soluong} <br />
+                                        <strong>Giá: </strong>
+                                        {numeral(product.gia)
+                                          .format("0,0")
+                                          .replace(/,/g, ".")}{" "}
+                                        VNĐ
+                                        <br />
+                                        <strong>
+                                          Tổng tiền sản phẩm:
+                                        </strong>{" "}
+                                        {numeral(product.tongtien)
+                                          .format("0,0")
+                                          .replace(/,/g, ".")}{" "}
+                                        VNĐ
+                                        <br />
+                                        {i < hoadon.products.length - 1 && (
+                                          <hr />
+                                        )}
+                                      </div>
+                                    ))}
+                                  </span>
+                                </div>
+                                <div className="d-flex align-items-center gap-2">
+                                  <span className="text-dark">
+                                    <strong>Tên khách hàng:</strong>{" "}
+                                    {hoadon.tenuser}
+                                  </span>
+                                </div>
+                                <div className="d-flex align-items-center gap-2">
+                                  <span className="text-dark">
+                                    <strong>Địa chỉ:</strong> {hoadon.diachi}
+                                  </span>
+                                </div>
+                                <div className="d-flex align-items-center gap-2">
+                                  <span className="text-dark">
+                                    <strong>Ngày: </strong>
+                                    {new Date(
+                                      hoadon.created_at
+                                    ).toLocaleDateString("vi-VN", {
+                                      day: "2-digit",
+                                      month: "2-digit",
+                                      year: "2-digit",
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                      second: "2-digit",
+                                    })}
+                                  </span>
+                                </div>
+                                <div className="d-flex align-items-center gap-2">
+                                  <span className="text-dark">
+                                    <strong>Tổng tiền hóa đơn:</strong>{" "}
+                                    {numeral(hoadon.tongtienhoadon)
+                                      .format("0,0")
+                                      .replace(/,/g, ".")}{" "}
+                                    VNĐ
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="col-auto">
+                              <div className="d-flex align-items-center gap-2">
+                                <AlertCircle
+                                  className={
+                                    hoadon.tentrangthai === "Đang xử lý"
+                                      ? "text-primary"
+                                      : hoadon.tentrangthai === "Hoàn thành"
+                                      ? "text-success"
+                                      : "text-danger"
+                                  }
+                                />
+                                <span
+                                  className={`fw-bold ${
+                                    hoadon.tentrangthai === "Đang xử lý"
+                                      ? "text-primary"
+                                      : hoadon.tentrangthai === "Hoàn thành"
+                                      ? "text-success"
+                                      : "text-danger"
+                                  }`}
+                                >
+                                  {hoadon.tentrangthai}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             )}

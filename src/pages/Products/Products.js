@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import numeral from "numeral";
 import style from "./Products.module.scss";
 import classNames from "classnames/bind";
 import banner from "../../assets/banner-barber.png";
@@ -14,23 +15,7 @@ export default function Products() {
   const [showModal, setShowModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showToast, setShowToast] = useState(false);
-
   const { addToCart } = useShoppingContext();
-
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  const fetchProducts = async () => {
-    try {
-      const response = await axios.get("http://localhost:8080/getAllProduct");
-      if (response.data) {
-        setProducts(response.data);
-      }
-    } catch (error) {
-      console.error("Lỗi khi tải sản phẩm:", error);
-    }
-  };
 
   const handleImageClick = (product) => {
     setSelectedProduct(product);
@@ -56,6 +41,42 @@ export default function Products() {
       handleCloseModal();
     }
   };
+  // Vừa Thêm
+  const [categories, setCategories] = useState([]); // Danh sách danh mục
+  const [selectedCategory, setSelectedCategory] = useState(null); // ID danh mục được chọn
+
+  useEffect(() => {
+    fetchCategories();
+    fetchProducts();
+  }, [selectedCategory]);
+
+  // Lấy danh sách danh mục
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/categories");
+      setCategories(response.data);
+    } catch (error) {
+      console.error("Lỗi khi tải danh mục:", error);
+    }
+  };
+
+  // Lấy danh sách sản phẩm theo danh mục
+  const fetchProducts = async () => {
+    try {
+      const url = selectedCategory
+        ? `http://localhost:8080/products?category_id=${selectedCategory}`
+        : "http://localhost:8080/products";
+
+      const response = await axios.get(url);
+      setProducts(response.data);
+    } catch (error) {
+      console.error("Lỗi khi tải sản phẩm:", error);
+    }
+  };
+
+  const handleCategoryClick = (categoryId) => {
+    setSelectedCategory(categoryId); // Cập nhật danh mục được chọn
+  };
 
   return (
     <div className="font-monospace fw-bolder">
@@ -64,9 +85,27 @@ export default function Products() {
           <p className={cx("title")}>SẢN PHẨM</p>
           <div className={cx("list")}>
             <h3>DANH MỤC SẢN PHẨM</h3>
+            {/* Vừa thêm vào  */}
             <ul className={cx("ul")}>
-              <li>Sáp vuốt tóc</li>
-              <li>Tinh dầu dưỡng tóc</li>
+              <li
+                onClick={() => setSelectedCategory(null)}
+                style={{ cursor: "pointer" }}
+              >
+                Tất cả
+              </li>
+              {categories.map((category) => (
+                <li
+                  key={category.id}
+                  onClick={() => handleCategoryClick(category.id)}
+                  style={{
+                    cursor: "pointer",
+                    fontWeight:
+                      category.id === selectedCategory ? "bold" : "normal",
+                  }}
+                >
+                  {category.ten}
+                </li>
+              ))}
             </ul>
           </div>
           <div className={cx("banner-1")}>
@@ -94,7 +133,8 @@ export default function Products() {
                   <div className="card-body text-center d-flex flex-column">
                     <h5 className="card-title">{product.ten}</h5>
                     <p className="card-text">
-                      {product.gia.toLocaleString()} đ
+                      {numeral(product.gia).format("0,0").replace(/,/g, ".")}{" "}
+                      VNĐ
                     </p>
                     <div className="mt-auto">
                       <Button
@@ -130,7 +170,9 @@ export default function Products() {
             />
             <h5 className="fw-bolder">Tên sản phẩm: {selectedProduct.ten}</h5>
             <p className="fw-bold">
-              Giá: {selectedProduct.gia.toLocaleString()} đ
+              Giá:{" "}
+              {numeral(selectedProduct.gia).format("0,0").replace(/,/g, ".")}{" "}
+              VNĐ
             </p>
             <p>{selectedProduct.chitiet}</p>
             <Button

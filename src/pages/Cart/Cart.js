@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { useShoppingContext } from "../../contexts/ShoppingContext";
 import { Link, useNavigate } from "react-router-dom";
 import { Modal, Button, Form } from "react-bootstrap"; // Import Modal and Form from React Bootstrap
-
+import numeral from "numeral";
 const Cart = () => {
   const {
     cartItems,
@@ -26,7 +27,16 @@ const Cart = () => {
   });
 
   const handleCloseModal = () => setShowModal(false);
-  const handleShowModal = () => setShowModal(true);
+  const handleShowModal = () => {
+    if (cartItems.length === 0) {
+      alert(
+        "Giỏ hàng của bạn đang trống! Vui lòng thêm sản phẩm trước khi thanh toán."
+      );
+      return;
+    }
+
+    setShowModal(true);
+  };
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
@@ -45,33 +55,74 @@ const Cart = () => {
       setError("Vui lòng nhập địa chỉ.");
       return;
     }
-    try {
-      const response = await fetch("http://localhost:8080/orders", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: localStorage.getItem("id"),
-          address: formData.address,
-          items: cartItems,
-          totalPrice: total,
-        }),
-      });
 
-      if (response.ok) {
-        const result = await response.json();
-        console.log("Order placed successfully:", result);
-        alert("Đặt hàng thành công");
-        clearCart();
-        navigate("/san-pham"); // Chuyển hướng tới trang thành công
-      } else {
-        console.error("Failed to place order:", response);
+    if (window.confirm("Xác nhận thanh toán?")) {
+      try {
+        const response = await fetch("http://localhost:8080/orders", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: localStorage.getItem("id"),
+            address: formData.address,
+            items: cartItems,
+            totalPrice: total,
+          }),
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          console.log("Order placed successfully:", result);
+          alert("Đặt hàng thành công");
+          clearCart();
+          navigate("/san-pham"); // Chuyển hướng tới trang thành công
+        } else {
+          console.error("Failed to place order:", response);
+        }
+      } catch (error) {
+        console.error("Error placing order:", error);
       }
-    } catch (error) {
-      console.error("Error placing order:", error);
     }
   };
+
+  useEffect(() => {
+    const shouldClearCart = localStorage.getItem("clearCartAfterPayment");
+    if (shouldClearCart === "true") {
+      clearCart(); // Gọi hàm xóa giỏ hàng
+      localStorage.removeItem("clearCartAfterPayment");
+    }
+  }, []);
+
+  const handlePlaceOrderMoMo = async () => {
+    // Kiểm tra thông tin địa chỉ
+    if (!formData.address.trim()) {
+      setError("Vui lòng nhập địa chỉ.");
+      return;
+    }
+
+    try {
+      const userId = localStorage.getItem("id");
+      const response = await axios.post("http://localhost:8080/paymentmomo", {
+        amount: total,
+        userId: userId,
+        address: formData.address,
+        cartItems: cartItems,
+        totalPrice: total,
+      });
+
+      if (response.data.payUrl) {
+        localStorage.setItem("clearCartAfterPayment", "true");
+        window.location.href = response.data.payUrl;
+      } else {
+        alert("Không thể khởi tạo thanh toán MoMo.");
+      }
+    } catch (error) {
+      console.error("Lỗi khi khởi tạo thanh toán:", error);
+      alert("Đã xảy ra lỗi trong quá trình thanh toán.");
+    }
+  };
+
   return (
     <div className="container vh-100 font-monospace fw-bolder">
       <h2>Giỏ hàng</h2>
@@ -111,8 +162,16 @@ const Cart = () => {
                     -
                   </button>
                 </td>
-                <td>{item.gia} đ</td>
-                <td>{item.gia * item.qty} đ</td>
+                <td>
+                  {numeral(item.gia).format("0,0").replace(/,/g, ".")} VNĐ
+                </td>
+
+                <td>
+                  {numeral(item.gia * item.qty)
+                    .format("0,0")
+                    .replace(/,/g, ".")}{" "}
+                  VNĐ
+                </td>
                 <td>
                   <button
                     className="btn btn-sm btn-danger btn-remove"
@@ -129,7 +188,10 @@ const Cart = () => {
 
       <div className="col-md-12">
         <span className="float-end me-2">
-          <strong>Tổng tiền hóa đơn {total} đ</strong>
+          <strong>
+            Tổng tiền hóa đơn {numeral(total).format("0,0").replace(/,/g, ".")}{" "}
+            VNĐ
+          </strong>
         </span>
       </div>
 
@@ -139,9 +201,9 @@ const Cart = () => {
         </Link>
         <button
           className="btn btn-sm btn-success float-end me-2 d-block"
-          onClick={handleShowModal} // Mở modal khi nhấn nút "Place Order"
+          onClick={handleShowModal}
         >
-          Place Order
+          Thanh toán
         </button>
       </div>
 
@@ -199,7 +261,9 @@ const Cart = () => {
               </Form.Control.Feedback>
             </Form.Group>
             <div className="m-3 d-flex justify-content-end">
-              <strong>Tổng tiền: {total} đ</strong>
+              <strong>
+                Tổng tiền: {numeral(total).format("0,0").replace(/,/g, ".")} VNĐ
+              </strong>
             </div>
             <div className="d-flex justify-content-end">
               <Button variant="secondary" onClick={handleCloseModal}>
@@ -207,7 +271,7 @@ const Cart = () => {
               </Button>
               <Button
                 variant="primary"
-                onClick={handlePlaceOrder}
+                onClick={handlePlaceOrderMoMo}
                 className="ms-2"
               >
                 Thanh toán momo

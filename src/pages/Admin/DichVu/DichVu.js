@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-
+import numeral from "numeral";
 const DichVu = () => {
   const [showModal, setShowModal] = useState(false);
 
@@ -145,7 +145,7 @@ const DichVu = () => {
               <tr key={index}>
                 <td>{index + 1}</td>
                 <td>{e.tendichvu}</td>
-                <td>{e.gia}</td>
+                <td>{numeral(e.gia).format("0,0").replace(/,/g, ".")} VNĐ</td>
 
                 <td>
                   <button

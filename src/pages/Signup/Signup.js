@@ -104,10 +104,14 @@ export default function Signup() {
           <div className={cx("form-input")}>
             <label htmlFor="phone">Số điện thoại</label>
             <input
-              type="phone"
+              type="text"
               placeholder="Số điện thoại"
               name="phone"
-              id=""
+              pattern="[0-9]*"
+              maxLength={10}
+              onInput={(e) =>
+                (e.target.value = e.target.value.replace(/[^0-9]/g, ""))
+              }
               onChange={(e) => setValues({ ...values, phone: e.target.value })}
             />
             {error.phone && <span>{error.phone}</span>}

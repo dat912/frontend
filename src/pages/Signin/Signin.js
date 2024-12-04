@@ -32,6 +32,7 @@ export default function Signin() {
           localStorage.setItem("phone", values.phone);
           localStorage.setItem("ten", res.data.ten);
           localStorage.setItem("email", res.data.email);
+          localStorage.setItem("diachi", res.data.diachi);
           localStorage.setItem("id", res.data.id);
           // Điều hướng đến trang /dat-lich
           navigate("/dat-lich");

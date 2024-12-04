@@ -15,10 +15,11 @@ export default function Header() {
   console.log(id);
 
   const handleLogout = () => {
-    localStorage.removeItem("id");
-    localStorage.removeItem("phone");
-    localStorage.removeItem("ten");
-    localStorage.removeItem("email");
+    // localStorage.removeItem("id");
+    // localStorage.removeItem("phone");
+    // localStorage.removeItem("ten");
+    // localStorage.removeItem("email");
+    localStorage.clear();
     clearCart();
     navigate("/dang-nhap");
     window.location.reload();

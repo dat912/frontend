@@ -184,6 +184,18 @@ export default function Infor() {
                           className="form-control bg-light"
                         />
                       </div>
+
+                      <div className="col-12">
+                        <label className="form-label">Địa chỉ</label>
+                        <input
+                          type="text"
+                          value={user.diachi}
+                          onChange={(e) =>
+                            setUser({ ...user, diachi: e.target.value })
+                          }
+                          className="form-control bg-light"
+                        />
+                      </div>
                       <div className="col-12">
                         <button
                           type="submit"
@@ -222,6 +234,12 @@ export default function Infor() {
                         <Mail className="text-primary" />
                         <span className="fw-bold text-secondary">Email:</span>
                         <span>{user.email}</span>
+                      </div>
+
+                      <div className="d-flex align-items-center gap-2">
+                        <Mail className="text-primary" />
+                        <span className="fw-bold text-secondary">Địa chỉ:</span>
+                        <span>{user.diachi}</span>
                       </div>
                     </div>
                   )}
@@ -323,115 +341,120 @@ export default function Infor() {
                     <h5 className="card-title mb-0">Hóa đơn của tôi</h5>
                   </div>
                   <div className="card-body">
-                    {hoadonList.map((hoadon) => (
-                      <div
-                        key={hoadon.id}
-                        className="card border bg-light mb-3"
-                      >
-                        <div className="card-body">
-                          <div className="row align-items-center">
-                            <div className="col">
-                              <div className="d-flex flex-column gap-2">
-                                <div className="d-flex align-items-center gap-2">
-                                  <span className="text-dark">
-                                    <strong>Mã đơn hàng:</strong>{" "}
-                                    {hoadon.madonhang}
-                                  </span>
-                                </div>
-                                <div className="d-flex align-items-center gap-2">
-                                  <span className="text-dark">
-                                    {hoadon.products.map((product, i) => (
-                                      <div key={i}>
-                                        <strong>Tên sản phẩm:</strong>{" "}
-                                        {product.tensanpham} <br />
-                                        <strong>Số lượng:</strong>{" "}
-                                        {product.soluong} <br />
-                                        <strong>Giá: </strong>
-                                        {numeral(product.gia)
-                                          .format("0,0")
-                                          .replace(/,/g, ".")}{" "}
-                                        VNĐ
-                                        <br />
-                                        <strong>
-                                          Tổng tiền sản phẩm:
-                                        </strong>{" "}
-                                        {numeral(product.tongtien)
-                                          .format("0,0")
-                                          .replace(/,/g, ".")}{" "}
-                                        VNĐ
-                                        <br />
-                                        {i < hoadon.products.length - 1 && (
-                                          <hr />
-                                        )}
-                                      </div>
-                                    ))}
-                                  </span>
-                                </div>
-                                <div className="d-flex align-items-center gap-2">
-                                  <span className="text-dark">
-                                    <strong>Tên khách hàng:</strong>{" "}
-                                    {hoadon.tenuser}
-                                  </span>
-                                </div>
-                                <div className="d-flex align-items-center gap-2">
-                                  <span className="text-dark">
-                                    <strong>Địa chỉ:</strong> {hoadon.diachi}
-                                  </span>
-                                </div>
-                                <div className="d-flex align-items-center gap-2">
-                                  <span className="text-dark">
-                                    <strong>Ngày: </strong>
-                                    {new Date(
-                                      hoadon.created_at
-                                    ).toLocaleDateString("vi-VN", {
-                                      day: "2-digit",
-                                      month: "2-digit",
-                                      year: "2-digit",
-                                      hour: "2-digit",
-                                      minute: "2-digit",
-                                      second: "2-digit",
-                                    })}
-                                  </span>
-                                </div>
-                                <div className="d-flex align-items-center gap-2">
-                                  <span className="text-dark">
-                                    <strong>Tổng tiền hóa đơn:</strong>{" "}
-                                    {numeral(hoadon.tongtienhoadon)
-                                      .format("0,0")
-                                      .replace(/,/g, ".")}{" "}
-                                    VNĐ
-                                  </span>
+                    {hoadonList
+                      .sort(
+                        (a, b) =>
+                          new Date(b.created_at) - new Date(a.created_at)
+                      )
+                      .map((hoadon) => (
+                        <div
+                          key={hoadon.id}
+                          className="card border bg-light mb-3"
+                        >
+                          <div className="card-body">
+                            <div className="row align-items-center">
+                              <div className="col">
+                                <div className="d-flex flex-column gap-2">
+                                  <div className="d-flex align-items-center gap-2">
+                                    <span className="text-dark">
+                                      <strong>Mã đơn hàng:</strong>{" "}
+                                      {hoadon.madonhang}
+                                    </span>
+                                  </div>
+                                  <div className="d-flex align-items-center gap-2">
+                                    <span className="text-dark">
+                                      {hoadon.products.map((product, i) => (
+                                        <div key={i}>
+                                          <strong>Tên sản phẩm:</strong>{" "}
+                                          {product.tensanpham} <br />
+                                          <strong>Số lượng:</strong>{" "}
+                                          {product.soluong} <br />
+                                          <strong>Giá: </strong>
+                                          {numeral(product.gia)
+                                            .format("0,0")
+                                            .replace(/,/g, ".")}{" "}
+                                          VNĐ
+                                          <br />
+                                          <strong>
+                                            Tổng tiền sản phẩm:
+                                          </strong>{" "}
+                                          {numeral(product.tongtien)
+                                            .format("0,0")
+                                            .replace(/,/g, ".")}{" "}
+                                          VNĐ
+                                          <br />
+                                          {i < hoadon.products.length - 1 && (
+                                            <hr />
+                                          )}
+                                        </div>
+                                      ))}
+                                    </span>
+                                  </div>
+                                  <div className="d-flex align-items-center gap-2">
+                                    <span className="text-dark">
+                                      <strong>Tên khách hàng:</strong>{" "}
+                                      {hoadon.tenuser}
+                                    </span>
+                                  </div>
+                                  <div className="d-flex align-items-center gap-2">
+                                    <span className="text-dark">
+                                      <strong>Địa chỉ:</strong> {hoadon.diachi}
+                                    </span>
+                                  </div>
+                                  <div className="d-flex align-items-center gap-2">
+                                    <span className="text-dark">
+                                      <strong>Ngày: </strong>
+                                      {new Date(
+                                        hoadon.created_at
+                                      ).toLocaleDateString("vi-VN", {
+                                        day: "2-digit",
+                                        month: "2-digit",
+                                        year: "2-digit",
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                        second: "2-digit",
+                                      })}
+                                    </span>
+                                  </div>
+                                  <div className="d-flex align-items-center gap-2">
+                                    <span className="text-dark">
+                                      <strong>Tổng tiền hóa đơn:</strong>{" "}
+                                      {numeral(hoadon.tongtienhoadon)
+                                        .format("0,0")
+                                        .replace(/,/g, ".")}{" "}
+                                      VNĐ
+                                    </span>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                            <div className="col-auto">
-                              <div className="d-flex align-items-center gap-2">
-                                <AlertCircle
-                                  className={
-                                    hoadon.tentrangthai === "Đang xử lý"
-                                      ? "text-primary"
-                                      : hoadon.tentrangthai === "Hoàn thành"
-                                      ? "text-success"
-                                      : "text-danger"
-                                  }
-                                />
-                                <span
-                                  className={`fw-bold ${
-                                    hoadon.tentrangthai === "Đang xử lý"
-                                      ? "text-primary"
-                                      : hoadon.tentrangthai === "Hoàn thành"
-                                      ? "text-success"
-                                      : "text-danger"
-                                  }`}
-                                >
-                                  {hoadon.tentrangthai}
-                                </span>
+                              <div className="col-auto">
+                                <div className="d-flex align-items-center gap-2">
+                                  <AlertCircle
+                                    className={
+                                      hoadon.tentrangthai === "Đang xử lý"
+                                        ? "text-primary"
+                                        : hoadon.tentrangthai === "Hoàn thành"
+                                        ? "text-success"
+                                        : "text-danger"
+                                    }
+                                  />
+                                  <span
+                                    className={`fw-bold ${
+                                      hoadon.tentrangthai === "Đang xử lý"
+                                        ? "text-primary"
+                                        : hoadon.tentrangthai === "Hoàn thành"
+                                        ? "text-success"
+                                        : "text-danger"
+                                    }`}
+                                  >
+                                    {hoadon.tentrangthai}
+                                  </span>
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
                   </div>
                 </div>
               </div>

@@ -2,6 +2,8 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 
 const Khachhang = () => {
+  const [emailError, setEmailError] = useState("");
+  const [passError, setPassError] = useState("");
   const [user, setUser] = useState([]);
 
   const [showModal, setShowModal] = useState(false);
@@ -235,14 +237,27 @@ const Khachhang = () => {
                     type="email"
                     className="form-control"
                     value={currentUser.email}
-                    onChange={(e) =>
+                    onChange={(e) => {
+                      const email = e.target.value;
+                      const emailRegex =
+                        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+                      if (!emailRegex.test(email)) {
+                        setEmailError("Email không hợp lệ");
+                      } else {
+                        setEmailError("");
+                      }
+
                       setCurrentUser({
                         ...currentUser,
-                        email: e.target.value,
-                      })
-                    }
+                        email,
+                      });
+                    }}
                     placeholder="Enter Email"
                   />
+                  {emailError && (
+                    <span style={{ color: "red" }}>{emailError}</span>
+                  )}
                 </div>
 
                 {modalMode === "add" && (
@@ -252,14 +267,29 @@ const Khachhang = () => {
                       type="password"
                       className="form-control"
                       value={currentUser.password}
-                      onChange={(e) =>
+                      onChange={(e) => {
+                        const password = e.target.value;
+                        const passwordRegex =
+                          /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9]{6,}$/;
+
+                        if (!passwordRegex.test(password)) {
+                          setPassError(
+                            "Password  gồm 1 chữ cái thường 1 chữ cái in hoa 1 chữ số và có 6 ký tự"
+                          );
+                        } else {
+                          setPassError("");
+                        }
+
                         setCurrentUser({
                           ...currentUser,
-                          password: e.target.value,
-                        })
-                      }
+                          password,
+                        });
+                      }}
                       placeholder="Enter Password"
                     />
+                    {passError && (
+                      <span style={{ color: "red" }}>{passError}</span>
+                    )}
                   </div>
                 )}
 
@@ -267,6 +297,16 @@ const Khachhang = () => {
                   <label className="form-label">Số điện thoại </label>
                   <input
                     type="text"
+                    name="phone"
+                    pattern="[0-9]*"
+                    maxLength={10}
+                    onInput={(e) => {
+                      e.target.value = e.target.value.replace(/[^0-9]/g, "");
+                      if (!e.target.value.startsWith("0")) {
+                        e.target.value = "0" + e.target.value;
+                      }
+                      e.target.value = e.target.value.slice(0, 10);
+                    }}
                     className="form-control"
                     value={currentUser.phone}
                     onChange={(e) =>
@@ -316,7 +356,7 @@ const Khachhang = () => {
                       type="text"
                       className="form-control"
                       id="name"
-                      // value={selectedUser.name}
+                      value={user.ten}
                       // onChange={(e) =>
                       //   setOrder({ ...order, name: e.target.value })
                       // }

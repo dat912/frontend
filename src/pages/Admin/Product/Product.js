@@ -1,6 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import numeral from "numeral";
+import * as XLSX from "xlsx";
+
 const Product = () => {
   const [showModal, setShowModal] = useState(false);
   const [Product, setProduct] = useState([]);
@@ -120,20 +122,98 @@ const Product = () => {
     });
   };
 
+  // Xuất EXCEL
+  const handleExportExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(Product);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Products");
+    XLSX.writeFile(workbook, "ProductList.xlsx");
+  };
+  //NHẬP EXCEL
+  const fileInputRef = React.createRef();
+
+  const handleImportExcel = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        const binaryStr = evt.target.result;
+        const workbook = XLSX.read(binaryStr, { type: "binary" });
+        const worksheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[worksheetName];
+        const data = XLSX.utils.sheet_to_json(worksheet);
+
+        // Kiểm tra và chuẩn hóa dữ liệu trước khi gửi đến server
+        const validData = data.filter(
+          (row) =>
+            row.ten &&
+            row.img &&
+            row.gia &&
+            row.soluong &&
+            row.chitiet &&
+            row.category_id
+        );
+
+        if (validData.length === data.length) {
+          fetch("http://localhost:8080/api/products/import", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(validData),
+          })
+            .then((result) => {
+              window.location.reload();
+              alert("Nhập Excel thành công!");
+            })
+            .catch((error) => {
+              console.error("Lỗi khi nhập Excel:", error);
+              alert(`Lỗi khi nhập Excel: ${error.message}`);
+            });
+        } else {
+          console.error("File Excel có dữ liệu không hợp lệ");
+          alert("File Excel có dữ liệu không hợp lệ");
+        }
+      };
+      reader.readAsBinaryString(file);
+    }
+  };
+
   return (
     <div className="container mt-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2 className="font-monospace fw-bolder">Quản lý Product</h2>
-        <button
-          className="btn btn-success"
-          onClick={() => {
-            setModalMode("add");
-            resetForm();
-            setShowModal(true);
-          }}
-        >
-          Add Product
-        </button>
+        <div className="d-flex ms-auto">
+          {/* EXCEL */}
+          <button className="btn btn-primary me-2" onClick={handleExportExcel}>
+            Xuất Excel
+          </button>
+          <button
+            className="btn btn-secondary me-2"
+            onClick={() => fileInputRef.current.click()}
+          >
+            Nhập Excel
+          </button>
+          <input
+            type="file"
+            accept=".xlsx"
+            ref={fileInputRef}
+            style={{ display: "none" }}
+            onChange={handleImportExcel}
+          />
+          {/* END EXCEL */}
+
+          <button
+            className="btn btn-success"
+            onClick={() => {
+              setModalMode("add");
+              resetForm();
+              setShowModal(true);
+            }}
+          >
+            Add Product
+          </button>
+        </div>
       </div>
 
       <div className="table-responsive font-monospace fw-bolder">

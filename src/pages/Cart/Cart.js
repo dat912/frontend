@@ -23,7 +23,7 @@ const Cart = () => {
     name: "",
     phone: "",
     email: "",
-    address: "",
+    address: localStorage.getItem("diachi"),
   });
 
   const handleCloseModal = () => setShowModal(false);

@@ -37,10 +37,13 @@ export default function Header() {
     { path: "/booking", label: "Thông tin lịch" },
     { path: "/hoadon", label: "Thông tin hóa đơn" },
     { path: "/khachhang", label: "Thông tin khách hàng" },
+    { path: "/vaitro", label: "Quản lý Role" },
   ];
 
   const quanlyLinks = [
     { path: "/home", label: "Home" },
+    { path: "/category", label: "Category" },
+    { path: "/product", label: "Product" },
     { path: "/chinhanh", label: "Chi nhánh" },
     { path: "/dichvu", label: "Dịch vụ" },
     { path: "/booking", label: "Thông tin lịch" },

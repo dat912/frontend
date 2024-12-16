@@ -247,7 +247,7 @@ const Cart = () => {
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="formAddress">
-              <Form.Label>Địa chỉ</Form.Label>
+              <Form.Label>Địa chỉ giao hàng</Form.Label>
               <Form.Control
                 type="text"
                 name="address"

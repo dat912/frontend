@@ -4,7 +4,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { WebRoutes, AdminRoutes, QuanLyRoutes } from "./routes";
+import { WebRoutes, AdminRoutes } from "./routes";
 import DefaultLayout from "./components/DefaultLayout/DefaultLayout";
 import AdminLayout from "./components/AdminLayout/AdminLayout";
 import LoginAdmin from "./pages/Admin/Login/Login";
@@ -15,7 +15,7 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          <Route path="/" element={<Navigate to="/dang-nhap" />} />
+          <Route path="/" element={<Navigate to="/san-pham" />} />
 
           {/* Web Routes */}
           {WebRoutes.map((route, i) => (

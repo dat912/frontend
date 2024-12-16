@@ -5,6 +5,7 @@ import classNames from "classnames/bind";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import numeral from "numeral";
+
 const cx = classNames.bind(style);
 
 export default function Booking() {
@@ -13,6 +14,7 @@ export default function Booking() {
   const [listChiNhanh, setListChiNhanh] = useState([]);
   const [listNhanVien, setListNhanVien] = useState([]);
   const [listDichVu, setListDichVu] = useState([]);
+  const [gioDaDat, setGioDaDat] = useState([]);
   const [tongtien, setTongTien] = useState(0);
   const [selectedChiNhanh, setSelectedChiNhanh] = useState("");
 
@@ -58,10 +60,23 @@ export default function Booking() {
     }
   }, [selectedChiNhanh]);
 
-  // const handleInputChange = (e) => {
-  //   setValues({ ...values, [e.target.name]: e.target.value });
-
-  // };
+  useEffect(() => {
+    if (values.ngay && values.idchinhanh && values.idnhanvien) {
+      axios
+        .post("http://localhost:8080/kiemtragio", {
+          idchinhanh: values.idchinhanh,
+          ngay: values.ngay,
+          idnhanvien: values.idnhanvien,
+        })
+        .then((response) => {
+          console.log(response.data.gioDaDat);
+          setGioDaDat(response.data.gioDaDat);
+        })
+        .catch((error) => {
+          console.error("Lỗi khi lấy giờ đã đặt:", error);
+        });
+    }
+  }, [values.ngay, values.idchinhanh, values.idnhanvien]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -94,6 +109,7 @@ export default function Booking() {
         alert("Đặt lịch thành công");
         console.log(response.data);
         navigate("/dat-lich");
+        window.location.reload();
       } catch (error) {
         console.error(
           "Lỗi khi đặt lịch:",
@@ -104,15 +120,9 @@ export default function Booking() {
     }
   };
 
-  // useEffect(() => {
-  //   if (!window.localStorage.getItem("token")) {
-  //     navigate("/admin");
-  //   }
-  // }, [navigate]);
-
   return (
     <div className={cx("wrapper")}>
-      <h3>ĐẶT LỊCH CẮT TÓC</h3>
+      <h1>ĐẶT LỊCH CẮT TÓC</h1>
       <form onSubmit={handleSubmit}>
         {localStorage.getItem("id") && (
           <>
@@ -209,7 +219,7 @@ export default function Booking() {
         </div>
 
         <div className="container mt-3">
-          <label className="fw-bold">Chọn giờ</label>
+          <label className="fw-bold text-dark">Chọn giờ</label>
           <div
             className="btn-group btn-group-toggle d-flex flex-wrap"
             data-toggle="buttons"
@@ -219,7 +229,7 @@ export default function Booking() {
                 key={gio}
                 className={`btn btn-outline-dark m-1 col-3 mb-2 ${
                   selectedGio === gio ? "active" : ""
-                }`}
+                } ${gioDaDat.includes(gio) ? "disabled" : ""}`}
               >
                 <input
                   type="radio"
@@ -231,6 +241,7 @@ export default function Booking() {
                     handleInputChange(e);
                   }}
                   className="d-none"
+                  disabled={gioDaDat.includes(gio)}
                   required
                 />
                 {gio}

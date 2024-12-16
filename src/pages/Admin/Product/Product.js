@@ -132,7 +132,7 @@ const Product = () => {
   //NHẬP EXCEL
   const fileInputRef = React.createRef();
 
-  const handleImportExcel = (e) => {
+  const handleImportExcel = async (e) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
@@ -143,18 +143,34 @@ const Product = () => {
         const worksheet = workbook.Sheets[worksheetName];
         const data = XLSX.utils.sheet_to_json(worksheet);
 
-        // Kiểm tra và chuẩn hóa dữ liệu trước khi gửi đến server
-        const validData = data.filter(
+        // Loại bỏ khoảng trắng và chuẩn hóa tên
+        const formattedData = data.map((row) => ({
+          ...row,
+          ten: row.ten.trim().toLowerCase(),
+        }));
+
+        // Kiểm tra trùng tên với sản phẩm hiện tại trong frontend
+        const validData = formattedData.filter(
           (row) =>
             row.ten &&
             row.img &&
             row.gia &&
             row.soluong &&
             row.chitiet &&
-            row.category_id
+            row.category_id &&
+            !Product.some((p) => p.ten.trim().toLowerCase() === row.ten)
         );
 
-        if (validData.length === data.length) {
+        // Nếu có sản phẩm bị loại bỏ do trùng tên, thông báo cho người dùng
+        if (formattedData.length !== validData.length) {
+          alert(
+            "Một số sản phẩm trong file Excel trùng với sản phẩm hiện có và đã bị loại bỏ!"
+          );
+          window.location.reload();
+        }
+
+        // Gửi dữ liệu hợp lệ lên server
+        if (validData.length > 0) {
           fetch("http://localhost:8080/api/products/import", {
             method: "POST",
             headers: {
@@ -162,17 +178,18 @@ const Product = () => {
             },
             body: JSON.stringify(validData),
           })
+            .then((response) => response.json())
             .then((result) => {
-              window.location.reload();
+              console.log("Nhập Excel thành công:", result);
               alert("Nhập Excel thành công!");
+              window.location.reload();
             })
             .catch((error) => {
               console.error("Lỗi khi nhập Excel:", error);
-              alert(`Lỗi khi nhập Excel: ${error.message}`);
+              alert("Đã xảy ra lỗi khi nhập file Excel.");
             });
         } else {
-          console.error("File Excel có dữ liệu không hợp lệ");
-          alert("File Excel có dữ liệu không hợp lệ");
+          alert("Tất cả các sản phẩm trong file Excel đều trùng tên!");
         }
       };
       reader.readAsBinaryString(file);
@@ -239,7 +256,7 @@ const Product = () => {
                   <img src={e.img} alt={e.ten} width="70" />
                 </td>
                 <td>{e.soluong}</td>
-                <td> {numeral(e.gia).format("0,0").replace(/,/g, ".")}</td>
+                <td> {numeral(e.gia).format("0,0").replace(/,/g, ".")} VNĐ</td>
 
                 <td>{e.chitiet}</td>
                 <td>{e.category_name}</td>

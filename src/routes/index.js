@@ -23,6 +23,7 @@ import Bookings from "../pages/Admin/Bookings/Bookings";
 import HoaDon from "../pages/Admin/HoaDon/HoaDon";
 import Khachhang from "../pages/Admin/Khachhang/Khachhang";
 import LoginAdmin from "../pages/Admin/Login/Login";
+import VaiTro from "../pages/Admin/VaiTro/VaiTro";
 
 const WebRoutes = [
   { path: "/san-pham", component: Products },
@@ -41,6 +42,7 @@ const WebRoutes = [
 
 const AdminRoutes = [
   // { path: "/home", component: ProductAdmin },
+  { path: "/vaitro", component: VaiTro },
   { path: "/admin", component: LoginAdmin },
   { path: "/product", component: Product },
   { path: "/category", component: Category },
@@ -51,9 +53,7 @@ const AdminRoutes = [
   { path: "/dichvu", component: DichVu },
   { path: "/booking", component: Bookings },
   { path: "/hoadon", component: HoaDon },
-
   { path: "/khachhang", component: Khachhang },
-
   { path: "/home", component: Home },
 ];
 

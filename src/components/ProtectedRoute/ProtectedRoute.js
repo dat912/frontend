@@ -24,9 +24,12 @@ const ProtectedRoute = ({ children }) => {
       "/hoadon",
       "/payment",
       "/khachhang",
+      "/vaitro",
     ],
     quanly: [
       "/home",
+      "/category",
+      "/product",
       "/chinhanh",
       "/dichvu",
       "/booking",

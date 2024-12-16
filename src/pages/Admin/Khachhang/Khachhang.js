@@ -1,14 +1,13 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-
+import { useNavigate } from "react-router-dom";
+import numeral from "numeral";
 const Khachhang = () => {
   const [emailError, setEmailError] = useState("");
   const [passError, setPassError] = useState("");
   const [user, setUser] = useState([]);
-
   const [showModal, setShowModal] = useState(false);
   const [showModalCreate, setShowModalCreate] = useState(false);
-
   const [modalMode, setModalMode] = useState("add"); // 'add' or 'edit'
   const [currentUser, setCurrentUser] = useState({
     ten: "",
@@ -16,6 +15,100 @@ const Khachhang = () => {
     password: "",
     phone: "",
   });
+  ///
+
+  const navigate = useNavigate();
+  const [selectedGio, setSelectedGio] = useState(null);
+  const [listChiNhanh, setListChiNhanh] = useState([]);
+  const [listNhanVien, setListNhanVien] = useState([]);
+  const [listDichVu, setListDichVu] = useState([]);
+  const [tongtien, setTongTien] = useState(0);
+  const [selectedChiNhanh, setSelectedChiNhanh] = useState("");
+  const [gioDaDat, setGioDaDat] = useState([]);
+
+  const gios = [
+    "08:00",
+    "09:00",
+    "10:00",
+    "11:00",
+    "12:00",
+    "13:00",
+    "14:00",
+    "15:00",
+    "16:00",
+  ];
+
+  const [values, setValues] = useState({
+    gio: "",
+    ngay: "",
+    idchinhanh: "",
+    iddichvu: "",
+    idnhanvien: "",
+    iduser: localStorage.getItem("id"),
+    idtrangthai: 1,
+    tongtien: 0,
+  });
+
+  useEffect(() => {
+    axios.get("http://localhost:8080/getChiNhanhAll").then((response) => {
+      setListChiNhanh(response.data);
+    });
+    axios.get("http://localhost:8080/getDichvuAll").then((response) => {
+      setListDichVu(response.data);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (selectedChiNhanh) {
+      axios
+        .get(`http://localhost:8080/getNhanVienAll/${selectedChiNhanh}`)
+        .then((response) => {
+          setListNhanVien(response.data);
+        });
+    }
+  }, [selectedChiNhanh]);
+
+  // const handleInputChange = (e) => {
+  //   setValues({ ...values, [e.target.name]: e.target.value });
+
+  // };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setValues({ ...values, [name]: value });
+
+    if (name === "iddichvu") {
+      const selectedService = listDichVu.find(
+        (dichvu) => dichvu.id === parseInt(value)
+      );
+      if (selectedService) {
+        const newTongTien = selectedService.gia;
+        setTongTien(newTongTien);
+        setValues((prevValues) => ({ ...prevValues, tongtien: newTongTien }));
+      }
+    }
+  };
+
+  const handleSubmitDatLich = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/datlich",
+        values
+      );
+      alert("Đặt lịch thành công");
+      console.log(response.data);
+      window.location.reload();
+    } catch (error) {
+      console.error(
+        "Lỗi khi đặt lịch:",
+        error.response ? error.response.data : error.message
+      );
+      alert("Đặt lịch thất bại. Vui lòng thử lại.");
+    }
+  };
+
+  ///
 
   useEffect(() => {
     axios
@@ -118,15 +211,12 @@ const Khachhang = () => {
   };
 
   const handleCreateOrder = (user) => {
+    setCurrentUser(user);
     setShowModalCreate(true);
   };
 
   const handleCloseModal = () => {
     setShowModalCreate(false);
-    // setOrder((prevOrder) => ({
-    //   ...prevOrder,
-    //   items: [], // Reset items khi đóng modal
-    // }));
   };
 
   return (
@@ -179,15 +269,9 @@ const Khachhang = () => {
                   </button>
                   <button
                     className="btn btn-primary btn-sm me-2"
-                    onClick={() => handleCreateOrder(user)}
+                    onClick={() => handleCreateOrder(e)}
                   >
-                    Tạo đơn hàng
-                  </button>
-                  <button
-                    className="btn btn-primary btn-sm"
-                    // onClick={() => handleDelete(e.id)}
-                  >
-                    Tạo lịch
+                    Tạo lịch cắt
                   </button>
                 </td>
               </tr>
@@ -334,10 +418,10 @@ const Khachhang = () => {
       {showModalCreate && (
         <div className="modal d-block" tabIndex="-1" role="dialog">
           <div className="modal-dialog" role="document">
-            <div className="modal-content">
+            <div className="modal-content font-monospace fw-bolder">
               <div className="modal-header">
                 <h5 className="modal-title font-monospace fw-bolder">
-                  Create Order for
+                  Tạo lịch đặt
                 </h5>
                 <button
                   type="button"
@@ -349,130 +433,171 @@ const Khachhang = () => {
               </div>
 
               <div className="modal-body">
-                <form>
-                  <div className="form-group">
-                    <label htmlFor="name">Name </label>
+                <form onSubmit={handleSubmitDatLich}>
+                  <div class="mb-3">
+                    <label for="ten" class="form-label">
+                      Tên
+                    </label>
                     <input
                       type="text"
-                      className="form-control"
-                      id="name"
-                      value={user.ten}
-                      // onChange={(e) =>
-                      //   setOrder({ ...order, name: e.target.value })
-                      // }
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="phone">Phone</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="phone"
-                      // value={selectedUser.phone}
-                      // onChange={(e) =>
-                      //   setOrder({ ...order, phone: e.target.value })
-                      // }
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="email">Email</label>
-                    <input
-                      type="email"
-                      className="form-control"
-                      id="email"
-                      // value={selectedUser.email}
-                      // onChange={(e) =>
-                      //   setOrder({ ...order, email: e.target.value })
-                      // }
-                    />
-                  </div>
-                  {/* <div className="form-group">
-                    <label htmlFor="address">Address</label>
-                    <textarea
-                      className="form-control"
-                      id="address"
-                      value={selectedUser.address}
+                      name="ten"
+                      class="form-control"
+                      value={currentUser.ten}
                       onChange={(e) =>
-                        setOrder({ ...order, address: e.target.value })
+                        setCurrentUser({
+                          ...currentUser,
+                          ten: e.target.value,
+                        })
                       }
-                    ></textarea>
-                  </div> */}
-                  <h3 className="pt-3 font-monospace fw-bolder">Sản phẩm</h3>
-                  <table className="table">
-                    <thead>
-                      <tr>
-                        <th>Name</th>
-                        <th>Price</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {/* {products.map((product, index) => (
-                        <tr key={index}>
-                          <td>{product.name}</td>
-                          <td>{product.price}</td>
-                          <td>
-                            <button
-                              type="button"
-                              className="btn btn-primary"
-                              onClick={() => handleAddToOrder(product)}
-                            >
-                              Add
-                            </button>
-                          </td>
-                        </tr>
-                      ))} */}
-                    </tbody>
-                  </table>
-                  <h3>Order Summary</h3>
-                  <table className="table">
-                    <thead>
-                      <tr>
-                        <th>Product</th>
-                        <th>Price</th>
-                        <th>Quantity</th>
-                        <th>Total</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {/* {order.items.map((item, index) => (
-                        <tr key={index}>
-                          <td>{item.name}</td>
-                          <td>${item.price}</td>
-                          <td>{item.quantity}</td>
-                          <td>${item.price * item.quantity}</td>
-                          <td>
-                            <button
-                              type="button"
-                              className="btn btn-danger btn-sm"
-                              onClick={() => handleRemoveFromOrder(item.id)}
-                            >
-                              Remove
-                            </button>
-                          </td>
-                        </tr>
-                      ))} */}
-                    </tbody>
-                  </table>
+                      readOnly
+                      required
+                    />
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="phone" class="form-label">
+                      Số điện thoại
+                    </label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      class="form-control"
+                      value={currentUser.phone}
+                      onChange={(e) =>
+                        setCurrentUser({
+                          ...currentUser,
+                          phone: e.target.value,
+                        })
+                      }
+                      readOnly
+                      required
+                    />
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="idchinhanh" class="form-label">
+                      Chọn chi nhánh
+                    </label>
+                    <select
+                      name="idchinhanh"
+                      class="form-select"
+                      value={selectedChiNhanh}
+                      onChange={(e) => {
+                        setSelectedChiNhanh(e.target.value);
+                        handleInputChange(e);
+                      }}
+                      required
+                    >
+                      <option value="">Chọn chi nhánh</option>
+                      {listChiNhanh.map((chinhanh) => (
+                        <option key={chinhanh.id} value={chinhanh.id}>
+                          {chinhanh.tenchinhanh}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="idnhanvien" class="form-label">
+                      Chọn nhân viên
+                    </label>
+                    <select
+                      name="idnhanvien"
+                      class="form-select"
+                      onChange={handleInputChange}
+                      disabled={!selectedChiNhanh}
+                      required
+                    >
+                      <option value="">Chọn nhân viên</option>
+                      {listNhanVien.map((nhanvien) => (
+                        <option key={nhanvien.id} value={nhanvien.id}>
+                          {nhanvien.ten}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="iddichvu" class="form-label">
+                      Chọn dịch vụ
+                    </label>
+                    <select
+                      name="iddichvu"
+                      class="form-select"
+                      onChange={handleInputChange}
+                      required
+                    >
+                      <option value="">Chọn dịch vụ</option>
+                      {listDichVu.map((dichvu) => (
+                        <option key={dichvu.id} value={dichvu.id}>
+                          {dichvu.tendichvu}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label">Tổng tiền</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      value={`${numeral(tongtien)
+                        .format("0,0")
+                        .replace(/,/g, ".")} VNĐ`}
+                      readOnly
+                    />
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="ngay" class="form-label">
+                      Chọn ngày
+                    </label>
+                    <input
+                      type="date"
+                      name="ngay"
+                      class="form-control"
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="fw-bold">Chọn giờ</label>
+                    <div
+                      class="btn-group btn-group-toggle d-flex flex-wrap"
+                      data-toggle="buttons"
+                    >
+                      {gios.map((gio) => (
+                        <label
+                          key={gio}
+                          class={`btn btn-outline-dark m-1 col-3 mb-2 ${
+                            selectedGio === gio ? "active" : ""
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            name="gio"
+                            value={gio}
+                            checked={selectedGio === gio}
+                            onChange={(e) => {
+                              setSelectedGio(gio);
+                              handleInputChange(e);
+                            }}
+                            class="d-none"
+                            required
+                          />
+                          {gio}
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                      ĐẶT LỊCH
+                    </button>
+                  </div>
                 </form>
-              </div>
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  data-dismiss="modal"
-                  onClick={() => handleCloseModal(false)}
-                >
-                  Close
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  // onClick={handleSubmitOrder}
-                >
-                  Submit Order
-                </button>
               </div>
             </div>
           </div>

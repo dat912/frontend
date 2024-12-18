@@ -22,7 +22,6 @@ const ProtectedRoute = ({ children }) => {
       "/dichvu",
       "/booking",
       "/hoadon",
-      "/payment",
       "/khachhang",
       "/vaitro",
     ],

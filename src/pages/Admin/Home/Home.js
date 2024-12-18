@@ -22,7 +22,7 @@ import {
   Line,
 } from "recharts";
 import "./App.css";
-
+//
 function Home() {
   const [product, setProduct] = useState([]);
   const [category, setCategory] = useState([]);
